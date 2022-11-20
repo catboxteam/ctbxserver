@@ -3,5 +3,6 @@
   <h3>Server implementation for LittleBigPlanet series</h3>
 </div>
 
-**Warning**
+> **Warning**
+> This is a warning
 
