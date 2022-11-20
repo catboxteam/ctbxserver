@@ -36,12 +36,12 @@ def getUser(name):
         final += xmls.createElem("lbp3FreeSlots","50")
 
         final += xmls.createElem("lists_quota","50")
-        final += xmls.createElem("heartCount",Users.heartCount)
-        final += xmls.createElem("planets",Users.planetHash)
-        final += xmls.createElem("crossControlPlanet",Users.planetHash)
-        final += xmls.createElem("yay2",Users.yayHash)
-        final += xmls.createElem("boo2",Users.booHash)
-        final += xmls.createElem("meh2",Users.booHash)
+        final += xmls.createElem("heartCount",user.heartCount)
+        final += xmls.createElem("planets",user.planetHash)
+        final += xmls.createElem("crossControlPlanet",user.planetHash)
+        final += xmls.createElem("yay2",user.yayHash)
+        final += xmls.createElem("boo2",user.booHash)
+        final += xmls.createElem("meh2",user.booHash)
         final += xmls.createElem("biography",user.biography)
         final += xmls.createElem("reviewCount",user.reviewCount)
         final += xmls.createElem("commentCount",user.commentsCount)
@@ -51,10 +51,10 @@ def getUser(name):
 
         final += xmls.createElem("commentsEnabled",user.commentsEnabled)
         final += finalResult
-        final += xmls.createElem("favouriteSlotCount",Users.heartedSlots)
-        final += xmls.createElem("favouriteUserCount",Users.heartedAuthors)
+        final += xmls.createElem("favouriteSlotCount",user.heartedSlots)
+        final += xmls.createElem("favouriteUserCount",user.heartedAuthors)
 
-        final += xmls.createElem("pins",Users.pins)
+        final += xmls.createElem("pins",user.pins)
 
         finalUser = xmls.taggedElem("user","type","user",final)
         return Response(finalUser,status=200, mimetype='text/xml')

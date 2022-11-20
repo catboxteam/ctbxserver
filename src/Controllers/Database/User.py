@@ -1,6 +1,6 @@
 from peewee import *
-
-db = SqliteDatabase("catbox.db")
+from Controllers.Database.Connect import db
+# db = SqliteDatabase("catbox.db")
 
 class BaseModel(Model):
     class Meta:
@@ -28,5 +28,4 @@ class Users(BaseModel):
     yayHash = TextField(null=True)
     photoCount = IntegerField(null=True,default=0)
     reviewCount = IntegerField(null=True,default=0)
-
     authCookie = TextField(null=True)

@@ -4,6 +4,7 @@ from Controllers.Elements import xml
 from flask import request,Response
 import xml.etree.ElementTree as ET
 from __main__ import app
+import json
 import io
 
 @app.route(f'{root}/updateUser',methods=['POST'])
@@ -23,9 +24,9 @@ def Update():
             case "biography":
                 User.biography = c.text
             case "icon":
-                User.icon = c.text
+                User.iconHash = c.text
             case "planets":
-                User.planets = c.text
+                User.planetHash = c.text
             case _:
                 print(f"Tag not found ",c.tag,c.text)
                 return Response(status=404)
@@ -33,6 +34,17 @@ def Update():
     # print(User.authCookie)
     return Response(status=200)
 
+
+@app.route(f'{root}/update_my_pins',methods=['POST'])
+def Pins():
+    cookie = request.cookies.get("MM_AUTH")
+    user = Users.select().where(Users.authCookie == cookie).get()
+    f = json.loads(request.data.decode())
+    pins = f["profile_pins"]
+    parsed = ",".join(str(x) for x in pins)
+    user.pins = parsed
+    user.save()
+    return Response(response="[{\"StatusCode\":200}]")
 
 @app.route(f'{root}/filterResources',methods=['POST'])
 def filter():
