@@ -4,5 +4,5 @@
 </div>
 
 > **Warning**
-> This is a warning
+> If you are going to use servers for public access, please dont, the project is unfinished and has a lot of vulns that can lead to data leaks
 
