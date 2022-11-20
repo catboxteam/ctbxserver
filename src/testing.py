@@ -1,15 +1,9 @@
+from Controllers.Database.Comment import Comments
 from Controllers.Database.User import Users
 from Controllers.Elements import xml
 
 
 
-xmls = xml.Element
-
-user = Users.get(username="Seconder45")
-location = xmls.createElem("x",user.locationX)\
-    +xmls.createElem("y",user.locationY)
-finalResult = xmls.createElem("location",location)
-print(finalResult)
 
 # user = Users(username="Seconder45")
 # location = xmls.createElem("x",user.locationX)\

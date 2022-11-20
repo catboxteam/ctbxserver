@@ -1,5 +1,7 @@
 root = "/LITTLEBIGPLANETPS3_XML"
 from Controllers.Database.User import Users
+from Controllers.Database.Comment import Comments
+
 from Controllers.Elements import xml
 from flask import request,Response
 from __main__ import app
@@ -8,6 +10,11 @@ from __main__ import app
 def getUser(name):
     try:
         xmls = xml.Element
+
+
+        comments = (Comments
+            .select(Comments)
+            .where(Comments.toUser==name)).count()
 
         user = Users.get(username=name)
         location = xmls.createElem("x",user.locationX)\
@@ -44,7 +51,7 @@ def getUser(name):
         final += xmls.createElem("meh2",user.booHash)
         final += xmls.createElem("biography",user.biography)
         final += xmls.createElem("reviewCount",user.reviewCount)
-        final += xmls.createElem("commentCount",user.commentsCount)
+        final += xmls.createElem("commentCount",comments)
 
         final += xmls.createElem("photosByMeCount","0")
         final += xmls.createElem("photosWithMeCount","0")

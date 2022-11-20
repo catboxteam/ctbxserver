@@ -15,5 +15,6 @@ class Comments(BaseModel):
     message = TextField(unique=False)
     timestamp = IntegerField(default=0)
     toUser = TextField(unique=False)
+    isDeleted = BooleanField(default=False)
     deletedType = TextField(null=True)
     deletedUser = TextField(null=True)
