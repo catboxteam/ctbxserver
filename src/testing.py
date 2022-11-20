@@ -1,8 +1,10 @@
 from Controllers.Database.Comment import Comments
-from Controllers.Database.User import Users
+from Controllers.Misc.genSlot import Slotsx
 from Controllers.Elements import xml
 
 
+
+print(Slotsx.genSlot("user","Seconder45","10","10"))
 
 
 # user = Users(username="Seconder45")

@@ -67,24 +67,3 @@ def getUser(name):
         return Response(finalUser,status=200, mimetype='text/xml')
     except Exception as e:
         return Response(e,status=404)
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-    except Exception as e:
-        print(e)

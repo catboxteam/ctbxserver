@@ -21,7 +21,6 @@ class Users(BaseModel):
     locationX = IntegerField(null=True,default=0)
     locationY = IntegerField(null=True,default=0)
     commentsEnabled = BooleanField(default=True)
-    commentsCount = IntegerField(default=0)
     heartedAuthors = IntegerField(default=0)
     heartedSlots = IntegerField(default=0)
     booHash = TextField(null=True)
