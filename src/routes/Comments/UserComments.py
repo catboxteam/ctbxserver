@@ -57,8 +57,8 @@ def getComments(user):
                     +Element.createElem("timestamp",r.timestamp)\
                     +Element.createElem("message",r.message)\
                     +Element.createElem("yourthumb",0)\
-                    +Element.createElem("deleted",r.isDeleted)\
-                    +Element.createElem("deletedBy",r.deletedBy)\
+                    +Element.createElem("deleted","true")\
+                    +Element.createElem("deletedBy",r.deletedUser)\
                     +Element.createElem("deleteType",r.deletedType)
         elif r.isDeleted == False:
             ids = Element.createElem("id",r.id)\
@@ -71,3 +71,21 @@ def getComments(user):
 
     comments1 = Element.createElem("comments",comment)
     return Response(response=comments1, status=200, mimetype="application/xml")
+
+
+@app.route(f'{root}/deleteUserComment/<user>',methods=['POST'])
+def deleteComments(user):
+    cookie = request.cookies.get("MM_AUTH")
+    user =  Users.select().where(Users.authCookie == cookie).get().username
+
+    #'user' is owner of comment or??
+    
+    commentId = int(request.args.get("commentId"))
+    
+    comment = Comments.get_by_id(commentId)
+    comment.isDeleted = True
+    comment.deletedType = "user"
+    comment.deletedUser = user
+    comment.save()
+
+    return Response(status=200)

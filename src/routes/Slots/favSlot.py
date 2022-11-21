@@ -41,3 +41,20 @@ def setFav(ids):
     d.save()
 
     return Response(status=200)
+
+@app.route(f"{root}/unfavourite/slot/user/<ids>",methods=["POST"])
+def unFav(ids):
+    cookie = request.cookies.get("MM_AUTH")
+    User = Users.select().where(Users.authCookie == cookie).get()
+    Slot = (Slots
+    .update({Slots.heartCount: Slots.heartCount-1})
+    .where(Slots.id==ids))
+    # dd = HeartedSlots(username=Users.select().where(Users.authCookie == cookie).get().username)
+    
+    # d = HeartedSlots()
+    # d.username = User.username
+    # d.slotId = ids
+    # Slot.execute()
+    # d.save()
+
+    return Response(status=200)

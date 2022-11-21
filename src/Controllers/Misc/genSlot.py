@@ -7,17 +7,15 @@ class Slotsx:
 
         slots = ''
         if typex == "user":
-            slots = (Slots.select(Slots).where(Slots.username==name).limit(pageSize).offset(pageStart))
+            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.username==name).limit(pageSize).offset(pageStart))
         elif typex == "id":
-            slots = (Slots.select(Slots).where(Slots.id==int(name)))
+            slots = (Slots.select(Slots).order_by(Slots.id.desc()).where(Slots.id==int(name)))
         elif typex == "mmpick":
-            slots = (Slots.select(Slots).where(Slots.mmpick==name).limit(pageSize).offset(pageStart))
+            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.mmpick==name).limit(pageSize).offset(pageStart))
         elif typex == "random":
             slots = (Slots.select(Slots).order_by(fn.Random()).limit(pageSize).offset(pageStart))
-        elif typex == "mmpick":
-            slots = (Slots.select(Slots).where(Slots.mmpick==True).order_by(fn.Random()).limit(pageSize).offset(pageStart))
         elif typex == "search":
-            slots = (Slots.select(Slots).where(Slots.name.contains(name)).limit(pageSize).offset(pageStart))
+            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.name.contains(name)).limit(pageSize).offset(pageStart))
 
         slotsXml =''
         final = ''

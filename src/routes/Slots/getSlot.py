@@ -122,7 +122,7 @@ def finalPublish():
 
 @app.route(f"{root}/s/user/<typex>",methods=["GET"])
 def getSlotsid(typex):
-    r =  Slotsx.genSlot("id",typex,10,10,"g")
+    r =  Slotsx.genSlot("id",typex,10,10)
     return Response(r,status=200, mimetype='text/xml')
 
 # @app.route(f"{root}/slots/",methods=["GET"])
