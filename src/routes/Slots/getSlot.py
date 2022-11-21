@@ -134,6 +134,8 @@ def getSlots(type):
     pageSize = request.args.get("pageSize")
     dateFilterType = request.args.get("dateFilterType")
     by = request.args.get("u")
+    search = request.args.get("query")
+
     typeSlot = ''
     S = Slotsx
     match type:
@@ -145,6 +147,8 @@ def getSlots(type):
             typeSlot = S.genSlot("random",by,pageSize,pageStart)
         case "mmpicks":
             typeSlot = S.genSlot("mmpick",by,pageSize,pageStart)
+        case "search":
+            typeSlot = S.genSlot("search",search,pageSize,pageStart)
 
 
     finalSlot = Element.taggedElem2("slots","total","hint_start",pageSize,pageStart,typeSlot)

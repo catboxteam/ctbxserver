@@ -16,7 +16,9 @@ class Slotsx:
             slots = (Slots.select(Slots).order_by(fn.Random()).limit(pageSize).offset(pageStart))
         elif typex == "mmpick":
             slots = (Slots.select(Slots).where(Slots.mmpick==True).order_by(fn.Random()).limit(pageSize).offset(pageStart))
-        
+        elif typex == "search":
+            slots = (Slots.select(Slots).where(Slots.name.contains(name)).limit(pageSize).offset(pageStart))
+
         slotsXml =''
         final = ''
         count = 0
