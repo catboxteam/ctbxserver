@@ -33,8 +33,8 @@ def setFav(ids):
     Slot = (Slots
     .update({Slots.heartCount: Slots.heartCount+1})
     .where(Slots.id==ids))
+    
     d = HeartedSlots()
-
     d.username = User.username
     d.slotId = ids
     Slot.execute()
@@ -49,12 +49,7 @@ def unFav(ids):
     Slot = (Slots
     .update({Slots.heartCount: Slots.heartCount-1})
     .where(Slots.id==ids))
-    # dd = HeartedSlots(username=Users.select().where(Users.authCookie == cookie).get().username)
-    
-    # d = HeartedSlots()
-    # d.username = User.username
-    # d.slotId = ids
-    # Slot.execute()
-    # d.save()
-
+    d = HeartedSlots.delete().where(HeartedSlots.slotId==ids).where(HeartedSlots.username==User.username)
+    d.execute()
+    Slot.execute()
     return Response(status=200)

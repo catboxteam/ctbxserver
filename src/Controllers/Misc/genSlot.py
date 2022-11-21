@@ -1,5 +1,5 @@
 from Controllers.Elements.xml import Element
-from Controllers.Database.Slot import Slots
+from Controllers.Database.Slot import Slots,HeartedSlots
 from datetime import timedelta, date
 from peewee import fn
 class Slotsx:
@@ -39,7 +39,7 @@ class Slotsx:
             
             finalLinks = Element.taggedElem("slot","type","user",linkss)
 
-
+            heartC = (HeartedSlots.select(HeartedSlots.slotId).where(HeartedSlots.slotId==r.id).count())
 
             # +Element.createElem("links",r[14])
             
@@ -63,7 +63,7 @@ class Slotsx:
                     +Element.createElem("minPlayers",r.minPlayers)\
                     +Element.createElem("maxPlayers",r.maxPlayers)\
                     +Element.createElem("moveRequired",r.moveRequired)\
-                    +Element.createElem("heartCount",r.heartCount)\
+                    +Element.createElem("heartCount",heartC)\
                     +Element.createElem("thumbsup",r.thumbsup)\
                     +Element.createElem("thumbsdown",r.thumbdown)\
                     +Element.createElem("averageRating",r.averageRating)\

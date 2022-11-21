@@ -1,6 +1,6 @@
 root = "/LITTLEBIGPLANETPS3_XML"
 from Controllers.Database.User import Users
-from Controllers.Database.Slot import Slots
+from Controllers.Database.Slot import Slots,HeartedSlots
 
 from Controllers.Database.Comment import Comments
 
@@ -16,6 +16,9 @@ def getUser(name):
             .select(Comments)
             .where(Comments.toUser==name)).count()
 
+        favSlots = (HeartedSlots
+            .select(HeartedSlots)
+            .where(HeartedSlots.username==name).count())
 
         # Slots = (Slots
         #     .select(Slots)
@@ -64,7 +67,7 @@ def getUser(name):
 
         final += Element.createElem("commentsEnabled",user.commentsEnabled)
         final += finalResult
-        final += Element.createElem("favouriteSlotCount",user.heartedSlots)
+        final += Element.createElem("favouriteSlotCount",favSlots)
         final += Element.createElem("favouriteUserCount",user.heartedAuthors)
 
         final += Element.createElem("pins",user.pins)
