@@ -7,6 +7,15 @@ class BaseModel(Model):
         database = db
         db_table = 'slots'
 
+
+class HeartedSlots(Model):
+    id = PrimaryKeyField(unique=True)
+    username = TextField()
+    slotId = IntegerField(null=True,default=0)
+    class Meta:
+        database = db
+        db_table = "favslots"
+
 class Slots(BaseModel):
     id = PrimaryKeyField(unique=True)
     username = TextField()

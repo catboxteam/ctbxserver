@@ -1,69 +1,75 @@
 root = "/LITTLEBIGPLANETPS3_XML"
 from Controllers.Database.User import Users
+from Controllers.Database.Slot import Slots
+
 from Controllers.Database.Comment import Comments
 
-from Controllers.Elements import xml
+from Controllers.Elements.xml import Element
 from flask import request,Response
 from __main__ import app
 
 @app.route(f'{root}/user/<name>',methods=['GET'])
 def getUser(name):
     try:
-        xmls = xml.Element
-
-
+    
         comments = (Comments
             .select(Comments)
             .where(Comments.toUser==name)).count()
 
+
+        # Slots = (Slots
+        #     .select(Slots)
+        #     .where(Slots.username==name).count()
+        # )
+
         user = Users.get(username=name)
-        location = xmls.createElem("x",user.locationX)\
-            +xmls.createElem("y",user.locationY)
-        finalResult = xmls.createElem("location",location)
+        location = Element.createElem("x",user.locationX)\
+            +Element.createElem("y",user.locationY)
+        finalResult = Element.createElem("location",location)
 
-        final = xmls.taggedElem("npHandle","icon",user.iconHash,user.username)
-        final += xmls.createElem("game","2")
-        final += xmls.createElem("lbp1UsedSlots","0")
-        final += xmls.createElem("entitledSlots","50")
-        final += xmls.createElem("freeSlots","50") #AllSlots - usedSlots\
+        final = Element.taggedElem("npHandle","icon",user.iconHash,user.username)
+        final += Element.createElem("game","2")
+        final += Element.createElem("lbp1UsedSlots","0")
+        final += Element.createElem("entitledSlots","50")
+        final += Element.createElem("freeSlots","50") #AllSlots - usedSlots\
 
-        final += xmls.createElem("crossControlUsedSlots","0")
-        final += xmls.createElem("crossControlEntitledSlots","50")
-        final += xmls.createElem("crossControlPurchasedSlots","0")
-        final += xmls.createElem("crossControlFreeSlots","50")
+        final += Element.createElem("crossControlUsedSlots","0")
+        final += Element.createElem("crossControlEntitledSlots","50")
+        final += Element.createElem("crossControlPurchasedSlots","0")
+        final += Element.createElem("crossControlFreeSlots","50")
 
-        final += xmls.createElem("lbp2UsedSlots","0")
-        final += xmls.createElem("lbp2EntitledSlots","50")
-        final += xmls.createElem("lbp2PurchasedSlots","0")
-        final += xmls.createElem("lbp2FreeSlots","50")
+        final += Element.createElem("lbp2UsedSlots","0")
+        final += Element.createElem("lbp2EntitledSlots","50")
+        final += Element.createElem("lbp2PurchasedSlots","0")
+        final += Element.createElem("lbp2FreeSlots","50")
 
-        final += xmls.createElem("lbp3UsedSlots","0")
-        final += xmls.createElem("lbp3EntitledSlots","50")
-        final += xmls.createElem("lbp3PurchasedSlots","0")
-        final += xmls.createElem("lbp3FreeSlots","50")
+        final += Element.createElem("lbp3UsedSlots","0")
+        final += Element.createElem("lbp3EntitledSlots","50")
+        final += Element.createElem("lbp3PurchasedSlots","0")
+        final += Element.createElem("lbp3FreeSlots","50")
 
-        final += xmls.createElem("lists_quota","50")
-        final += xmls.createElem("heartCount",user.heartCount)
-        final += xmls.createElem("planets",user.planetHash)
-        final += xmls.createElem("crossControlPlanet",user.planetHash)
-        final += xmls.createElem("yay2",user.yayHash)
-        final += xmls.createElem("boo2",user.booHash)
-        final += xmls.createElem("meh2",user.booHash)
-        final += xmls.createElem("biography",user.biography)
-        final += xmls.createElem("reviewCount",user.reviewCount)
-        final += xmls.createElem("commentCount",comments)
+        final += Element.createElem("lists_quota","50")
+        final += Element.createElem("heartCount",user.heartCount)
+        final += Element.createElem("planets",user.planetHash)
+        final += Element.createElem("crossControlPlanet",user.planetHash)
+        final += Element.createElem("yay2",user.yayHash)
+        final += Element.createElem("boo2",user.booHash)
+        final += Element.createElem("meh2",user.booHash)
+        final += Element.createElem("biography",user.biography)
+        final += Element.createElem("reviewCount",user.reviewCount)
+        final += Element.createElem("commentCount",comments)
 
-        final += xmls.createElem("photosByMeCount","0")
-        final += xmls.createElem("photosWithMeCount","0")
+        final += Element.createElem("photosByMeCount","0")
+        final += Element.createElem("photosWithMeCount","0")
 
-        final += xmls.createElem("commentsEnabled",user.commentsEnabled)
+        final += Element.createElem("commentsEnabled",user.commentsEnabled)
         final += finalResult
-        final += xmls.createElem("favouriteSlotCount",user.heartedSlots)
-        final += xmls.createElem("favouriteUserCount",user.heartedAuthors)
+        final += Element.createElem("favouriteSlotCount",user.heartedSlots)
+        final += Element.createElem("favouriteUserCount",user.heartedAuthors)
 
-        final += xmls.createElem("pins",user.pins)
+        final += Element.createElem("pins",user.pins)
 
-        finalUser = xmls.taggedElem("user","type","user",final)
+        finalUser = Element.taggedElem("user","type","user",final)
         return Response(finalUser,status=200, mimetype='text/xml')
     except Exception as e:
         return Response(e,status=404)

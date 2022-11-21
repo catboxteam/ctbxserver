@@ -23,10 +23,12 @@ def startPublish():
 
     resources = []
     links = []
-
-    dd = Slots(username=Users.select().where(Users.authCookie == cookie).get().username)
-    dd.firstPublished =startPub
-    dd.lastUpdated = startPub
+    if root.find("id") == None:
+        dd = Slots(username=Users.select().where(Users.authCookie == cookie).get().username)
+        dd.firstPublished = startPub
+    else:
+        dd = Slots.select().where(Slots.id==root.find("id").text).get()
+    # dd.lastUpdated = startPub
     for child in root:
         match child.tag:
             case "name":
@@ -90,6 +92,8 @@ def startPublish():
                 dd.resource = resourceParse
             case _:
                 print(f"Not found {child.tag} {child.text}")
+
+    dd.lastUpdated = startPub
     dd.save()
     resourcesXml = ''
     for i in resources:
@@ -100,7 +104,6 @@ def startPublish():
     output = Element.taggedElem("slot","type","user",resourcesXml)
     
     print("Generated resources")
-    # return Response(status=200)
     return Response(output,status=200, mimetype='text/xml')
 
 
@@ -119,112 +122,32 @@ def finalPublish():
 
 @app.route(f"{root}/s/user/<typex>",methods=["GET"])
 def getSlotsid(typex):
-    r =  Slotsx.genSlot("id",typex,10,10)
+    r =  Slotsx.genSlot("id",typex,10,10,"g")
     return Response(r,status=200, mimetype='text/xml')
 
+# @app.route(f"{root}/slots/",methods=["GET"])
 @app.route(f"{root}/slots/<type>",methods=["GET"])
 def getSlots(type):
     cookie = request.cookies.get("MM_AUTH")
     filter = request.args.get("gameFilterType")
-    pageStart = request.args.get("pageStart")
+    pageStart = int(request.args.get("pageStart"))-1
     pageSize = request.args.get("pageSize")
+    dateFilterType = request.args.get("dateFilterType")
     by = request.args.get("u")
     typeSlot = ''
     S = Slotsx
     match type:
+        case "developer":
+            print("WIP")
         case "by":
             typeSlot = S.genSlot("user",by,pageSize,pageStart)
-        case "random":
+        case "lbp2luckydip":
             typeSlot = S.genSlot("random",by,pageSize,pageStart)
+        case "mmpicks":
+            typeSlot = S.genSlot("mmpick",by,pageSize,pageStart)
 
 
-
-    return Response(typeSlot,status=200, mimetype='text/xml')
-    # slots = (Slots
-    # .select(Slots)
-    # .where(Slots.username==by)
-    # .limit(pageSize)
-    # .offset(pageStart)
-    # )
-
-    # slotsXml =''
-    # final = ''
-    # count = 0
-    # for r in slots:
-    #     count +=1
-    #     l =Element.createElem("x",r.locationX)\
-    #             +Element.createElem("y",r.locationY)\
-
-        
-    #     location = Element.createElem("location",l)
-    #     rez = ''
-    #     res = str(r.resource).split(";")
-    #     for i in res:
-    #         rez += Element.createElem("resource",i)
-
-    #     linkss = ''
-    #     link = str(r.links).split(";")
-    #     for i in link:
-    #         linkss += Element.createElem("id",i)
-        
-    #     finalLinks = Element.taggedElem("slot","type","user",linkss)
+    finalSlot = Element.taggedElem2("slots","total","hint_start",pageSize,pageStart,typeSlot)
 
 
-
-    #     # +Element.createElem("links",r[14])
-        
-    #     slotsXml=Element.createElem("id",r.id)\
-    #             +Element.createElem("npHandle",r.username)\
-    #             +Element.createElem("name",r.name)\
-    #             +Element.createElem("description",r.description)\
-    #             +Element.createElem("icon",r.icon)\
-    #             +Element.createElem("rootLevel",r.rootLevel)\
-    #             +rez\
-    #             +location\
-    #             +Element.createElem("initiallyLocked",r.initiallyLocked)\
-    #             +Element.createElem("isSubLevel",r.isSubLevel)\
-    #             +Element.createElem("isLBP1Only",r.isLBP1Only)\
-    #             +Element.createElem("shareable",r.shareable)\
-    #             +Element.createElem("authorLabels",r.authorLabels)\
-    #             +Element.createElem("labels",r.labels)\
-    #             +finalLinks\
-    #             +Element.createElem("internalLinks",r.internalLinks)\
-    #             +Element.createElem("leveltype",r.leveltype)\
-    #             +Element.createElem("minPlayers",r.minPlayers)\
-    #             +Element.createElem("maxPlayers",r.maxPlayers)\
-    #             +Element.createElem("moveRequired",r.moveRequired)\
-    #             +Element.createElem("heartCount",r.heartCount)\
-    #             +Element.createElem("thumbsup",r.thumbsup)\
-    #             +Element.createElem("thumbsdown",r.thumbdown)\
-    #             +Element.createElem("averageRating",r.averageRating)\
-    #             +Element.createElem("playerCount",r.playerCount)\
-    #             +Element.createElem("matchingPlayers",r.matchingPlayers)\
-    #             +Element.createElem("mmpick",r.mmpick)\
-    #             +Element.createElem("isAdventurePlanet",r.isAdventurePlanet)\
-    #             +Element.createElem("playCount",r.playCount)\
-    #             +Element.createElem("completionCount",r.completionCount)\
-    #             +Element.createElem("lbp1PlayCount",r.lbp1PlayCount)\
-    #             +Element.createElem("lbp1CompletionCount",r.lbp1CompletionCount)\
-    #             +Element.createElem("lbp1UniquePlayCount",r.lbp1UniquePlayCount)\
-    #             +Element.createElem("lbp2PlayCount",r.lbp2PlayCount)\
-    #             +Element.createElem("lbp2CompletionCount",r.lbp2CompletionCount)\
-    #             +Element.createElem("uniquePlayCount",r.uniquePlayCount)\
-    #             +Element.createElem("lbp3PlayCount",r.lbp3PlayCount)\
-    #             +Element.createElem("lbp3CompletionCount",r.lbp3CompletionCount)\
-    #             +Element.createElem("lbp3UniquePlayCount",r.lbp3UniquePlayCount)\
-    #             +Element.createElem("reviewsEnabled",r.reviewsEnabled)\
-    #             +Element.createElem("commentsEnabled",r.commentsEnabled)\
-    #             +Element.createElem("publishedIn",r.publishedIn)\
-    #             +Element.createElem("firstPublished",r.firstPublished)\
-    #             +Element.createElem("lastUpdated",r.lastUpdated)\
-    #             +Element.createElem("authorPhotoCount",r.authorPhotoCount)\
-    #             +Element.createElem("photoCount",r.photoCount)\
-    #             +Element.createElem("yourlbp1PlayCount",r.yourlbp1PlayCount)\
-    #             +Element.createElem("yourlbp2PlayCount",r.yourlbp2PlayCount)\
-
-    #     final += Element.taggedElem("slot","type","user",slotsXml)       
-    
-
-    # dd = Element.taggedElem2("slots","total","hint_start",str(count),count,final)
-
-    # return Response(dd,status=200, mimetype='text/xml')
+    return Response(finalSlot,status=200, mimetype='text/xml')

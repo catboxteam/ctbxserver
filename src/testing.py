@@ -1,10 +1,27 @@
 from Controllers.Database.Comment import Comments
+from Controllers.Database.Slot import Slots
+
 from Controllers.Misc.genSlot import Slotsx
 from Controllers.Elements import xml
+from Controllers.Database.Slot import HeartedSlots
+from Controllers.Database.User import Users
+from datetime import timedelta, date
+getFav = (HeartedSlots.select().where(HeartedSlots.username=="Seconder45"))
+qq = (HeartedSlots
+.select()
+)
 
+tested = (Slots.select()
+.join(HeartedSlots)
+.where(HeartedSlots.username == "Seconder45")
+)
+print(tested)
 
+# EndDate = date.today() + timedelta(days=-31)
 
-print(Slotsx.genSlot("user","Seconder45","10","10"))
+# print(EndDate)
+
+# print(Slotsx.genSlot("user","Seconder45","10","10"))
 
 
 # user = Users(username="Seconder45")

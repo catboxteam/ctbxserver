@@ -6,7 +6,7 @@ from Controllers.Database.Slot import *
 
 
 # db.create_tables([Users,Comments])
-db.create_tables([Slots])
+db.create_tables([HeartedSlots])
 
 # d = Users.create(username="Seconder45")
 

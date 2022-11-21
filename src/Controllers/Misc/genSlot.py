@@ -1,17 +1,22 @@
 from Controllers.Elements.xml import Element
 from Controllers.Database.Slot import Slots
+from datetime import timedelta, date
+from peewee import fn
 class Slotsx:
     def genSlot(typex,name,pageSize,pageStart):
 
+        slots = ''
         if typex == "user":
-            slots = (Slots.select(Slots).where(Slots.username==name))
+            slots = (Slots.select(Slots).where(Slots.username==name).limit(pageSize).offset(pageStart))
         elif typex == "id":
             slots = (Slots.select(Slots).where(Slots.id==int(name)))
         elif typex == "mmpick":
-            slots = (Slots.select(Slots).where(Slots.mmpick==name))
+            slots = (Slots.select(Slots).where(Slots.mmpick==name).limit(pageSize).offset(pageStart))
         elif typex == "random":
-            slots = (Slots.select(Slots).random())
-
+            slots = (Slots.select(Slots).order_by(fn.Random()).limit(pageSize).offset(pageStart))
+        elif typex == "mmpick":
+            slots = (Slots.select(Slots).where(Slots.mmpick==True).order_by(fn.Random()).limit(pageSize).offset(pageStart))
+        
         slotsXml =''
         final = ''
         count = 0
@@ -89,6 +94,9 @@ class Slotsx:
 
             final += Element.taggedElem("slot","type","user",slotsXml)       
         
+        # if check == "heart":
+        #     dd = Element.taggedElem2("favouriteSlots","total","hint_start",str(count),count,final)
+        # else:
 
-        dd = Element.taggedElem2("slots","total","hint_start",str(count),count,final)
-        return dd
+        #     dd = Element.taggedElem2("slots","total","hint_start",str(count),count,final)
+        return final
