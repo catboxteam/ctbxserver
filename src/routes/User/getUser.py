@@ -1,6 +1,7 @@
 root = "/LITTLEBIGPLANETPS3_XML"
-from Controllers.Database.User import Users
+from Controllers.Database.User import Users,heartedUser
 from Controllers.Database.Slot import Slots,HeartedSlots
+from Controllers.Database.Photo import UserPhoto
 
 from Controllers.Database.Comment import Comments
 
@@ -19,6 +20,18 @@ def getUser(name):
         favSlots = (HeartedSlots
             .select(HeartedSlots)
             .where(HeartedSlots.username==name).count())
+
+        userCount = (heartedUser
+            .select(heartedUser.whoHearted)
+            .where(heartedUser.whoHearted==name).count())
+
+        heartCount = (heartedUser
+            .select(heartedUser.username)
+            .where(heartedUser.username==name).count())
+
+        photosCount = (UserPhoto
+            .select(UserPhoto.username)
+            .where(UserPhoto.username==name).count())
 
         # Slots = (Slots
         #     .select(Slots)
@@ -52,7 +65,7 @@ def getUser(name):
         final += Element.createElem("lbp3FreeSlots","50")
 
         final += Element.createElem("lists_quota","50")
-        final += Element.createElem("heartCount",user.heartCount)
+        final += Element.createElem("heartCount",heartCount)
         final += Element.createElem("planets",user.planetHash)
         final += Element.createElem("crossControlPlanet",user.planetHash)
         final += Element.createElem("yay2",user.yayHash)
@@ -62,13 +75,13 @@ def getUser(name):
         final += Element.createElem("reviewCount",user.reviewCount)
         final += Element.createElem("commentCount",comments)
 
-        final += Element.createElem("photosByMeCount","0")
+        final += Element.createElem("photosByMeCount",photosCount)
         final += Element.createElem("photosWithMeCount","0")
 
         final += Element.createElem("commentsEnabled",user.commentsEnabled)
         final += finalResult
         final += Element.createElem("favouriteSlotCount",favSlots)
-        final += Element.createElem("favouriteUserCount",user.heartedAuthors)
+        final += Element.createElem("favouriteUserCount",userCount)
 
         final += Element.createElem("pins",user.pins)
 

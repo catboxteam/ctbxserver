@@ -11,7 +11,7 @@ class Slotsx:
         elif typex == "id":
             slots = (Slots.select(Slots).order_by(Slots.id.desc()).where(Slots.id==int(name)))
         elif typex == "mmpick":
-            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.mmpick==name).limit(pageSize).offset(pageStart))
+            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.mmpick==True).limit(pageSize).offset(pageStart))
         elif typex == "random":
             slots = (Slots.select(Slots).order_by(fn.Random()).limit(pageSize).offset(pageStart))
         elif typex == "search":

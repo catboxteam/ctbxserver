@@ -7,6 +7,15 @@ class BaseModel(Model):
         database = db
         db_table = 'users'
 
+
+class heartedUser(Model):
+    id = PrimaryKeyField(unique=True)
+    username = TextField()
+    whoHearted = TextField()
+    class Meta:
+        database = db
+        db_table = 'favusers'
+
 class Users(BaseModel):
     id = PrimaryKeyField(unique=True)
     username = TextField(unique=True)
