@@ -21,6 +21,7 @@ class Photo:
                     +Element.createElem("large",i.largeHash)\
                     +Element.createElem("plan",i.planHash)\
                     +slotType\
+                    +i.subjects
 
             final += Element.taggedElem("photo","timestamp",i.timestamp,photos)
         

@@ -32,6 +32,27 @@ def upload():
     slot = root.find("slot")
     timestamp = root.attrib["timestamp"]
     createPhoto.timestamp = timestamp
+    tesx = ''
+    if root.find("subjects"):
+        for child in root.findall("subjects/subject"):
+            usernames = child.find("npHandle").text
+            dp = child.find("displayName").text
+            bounds = child.find("bounds").text
+            #pls help me
+        
+            final = usernames,dp,bounds
+
+            test = Element.createElem("npHandle",usernames)\
+            +Element.createElem("displayName",dp)\
+            +Element.createElem("bounds",bounds)\
+
+
+            tesx += Element.createElem("subject",test)
+
+
+    g = Element.createElem("subjects",tesx)
+    
+    createPhoto.subjects = g
 
     match slot.attrib["type"]:
         case "developer":
