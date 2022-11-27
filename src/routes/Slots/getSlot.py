@@ -174,3 +174,13 @@ def getSlots(type):
 
 
     return Response(finalSlot,status=200, mimetype='text/xml')
+
+
+@app.route(f"{root}/unpublish/<id>",methods=["POST"])
+def delSlot(id):
+    ee = Slots.get_by_id(id)
+    # ee = Slots.delete().where
+
+    ee.delete_instance(recursive=True)
+
+    return Response(status=200)

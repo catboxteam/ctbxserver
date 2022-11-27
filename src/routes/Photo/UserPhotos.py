@@ -117,4 +117,12 @@ def getPhotoSlot(idx):
     return Response(response=final2, status=200, mimetype="application/xml")
 
                 
-
+@app.route(f'{root}/deletePhoto/<ids>',methods=['POST'])
+def deletePhoto(ids):
+    print("test")
+    cookie = request.cookies.get("MM_AUTH")
+    usr = Users.select().where(Users.authCookie == cookie).get().username
+    selectPhoto = UserPhoto.get_by_id(ids)
+    selectPhoto.delete_instance()
+    # selectPhoto.execute()
+    return Response(status=200)
