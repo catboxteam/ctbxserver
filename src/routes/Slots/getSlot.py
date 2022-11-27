@@ -127,6 +127,22 @@ def getSlotsid(typex):
     return Response(r,status=200, mimetype='text/xml')
 
 # @app.route(f"{root}/slots/",methods=["GET"])
+
+@app.route(f"{root}/slots",methods=["GET"])
+def get():
+    pageStart = int(request.args.get("pageStart"))-1
+    pageSize = request.args.get("pageSize")
+    q = (Slots.select()
+            .order_by(Slots.firstPublished.desc()))
+    f =''
+    for i in q:
+        f += Slotsx.genSlot("id",i.id,pageSize,pageStart)
+
+    dd = Element.taggedElem2("slots","total","hint_start",122,122,f)
+
+    return Response(response=dd, status=200, mimetype="application/xml")
+
+
 @app.route(f"{root}/slots/<type>",methods=["GET"])
 def getSlots(type):
     cookie = request.cookies.get("MM_AUTH")
