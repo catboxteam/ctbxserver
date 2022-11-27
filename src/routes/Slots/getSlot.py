@@ -4,11 +4,12 @@ from Controllers.Database.User import Users
 from Controllers.Elements.xml import Element
 from Controllers.Misc.genSlot import Slotsx
 from Controllers.Misc.misc import Misc
+from datetime import timedelta, date
 from flask import request,Response
 from Controllers.Misc.misc import *
 import xml.etree.ElementTree as ET
 from __main__ import app
-import io 
+import io
 
 
 @app.route(f"{root}/startPublish",methods=["POST"])
@@ -131,13 +132,13 @@ def getSlots(type):
     cookie = request.cookies.get("MM_AUTH")
     filter = request.args.get("gameFilterType")
     pageStart = int(request.args.get("pageStart"))-1
-    pageSize = request.args.get("pageSize")
-    dateFilterType = request.args.get("dateFilterType")
+    pageSize = int(request.args.get("pageSize"))
     by = request.args.get("u")
     search = request.args.get("query")
 
     typeSlot = ''
     S = Slotsx
+    date1 = ''
     match type:
         case "developer":
             print("WIP")
@@ -149,9 +150,27 @@ def getSlots(type):
             typeSlot = S.genSlot("mmpick",by,pageSize,pageStart)
         case "search":
             typeSlot = S.genSlot("search",search,pageSize,pageStart)
+        case "mostHearted":
+
+            dateFilterType = request.args.get("dateFilterType")
+            print(dateFilterType)
+            if dateFilterType:
+                if dateFilterType == "thisMonth":
+                    date1 = date.today() + timedelta(days=-31)
+                elif dateFilterType=="thisWeek":
+                    date1 = date.today() + timedelta(days=-7)
+
+                convert = time.mktime(date1.timetuple()) * 1000
+                typeSlot = S.genSlot("date",int(convert),pageSize,pageStart)
+            else:
+                print("test")
+        case _:
+            print(f"Not found")
+    # EndDate = date.today() + timedelta(days=-31)
+    # timez = time.mktime(EndDate.timetuple()) * 1000
 
 
-    finalSlot = Element.taggedElem2("slots","total","hint_start",pageSize,pageStart,typeSlot)
+    finalSlot = Element.taggedElem2("slots","total","hint_start",pageStart + pageSize,pageStart,typeSlot)
 
 
     return Response(finalSlot,status=200, mimetype='text/xml')

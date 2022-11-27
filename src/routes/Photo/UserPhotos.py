@@ -96,9 +96,25 @@ def getPhotos():
     return Response(response=final2, status=200, mimetype="application/xml")
 
 
-        
-        
 
+@app.route(f'{root}/photos/user/<idx>',methods=['GET'])
+def getPhotoSlot(idx):
+    pageStart = int(request.args.get("pageStart")) -1
+    pageSize = int(request.args.get("pageSize"))
+    cc = (UserPhoto
+        .select()
+        .where(UserPhoto.slotId==idx)
+        .order_by(UserPhoto.timestamp.desc())
+        .limit(pageSize)
+        .offset(pageStart)
+    )
+        
+    f = ''
+    for i in cc:
+        f += Photo.genPhoto(i.id)
+
+    final2 = Element.createElem("photos",f)
+    return Response(response=final2, status=200, mimetype="application/xml")
 
                 
 

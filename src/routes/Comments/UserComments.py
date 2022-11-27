@@ -7,7 +7,7 @@ from flask import request,Response
 import xml.etree.ElementTree as ET
 from __main__ import app
 import io
-
+@app.route(f'{root}/postComment/user/<name>',methods=['POST'])
 @app.route(f'{root}/postUserComment/<name>',methods=['POST'])
 def postComment(name):
     cookie = request.cookies.get("MM_AUTH")
@@ -30,7 +30,7 @@ def postComment(name):
 
     return Response(status=200)
 
-
+@app.route(f'{root}/comments/user/<user>',methods=['GET'])
 @app.route(f'{root}/userComments/<user>',methods=['GET'])
 def getComments(user):
 
@@ -74,6 +74,7 @@ def getComments(user):
 
 
 @app.route(f'{root}/deleteUserComment/<user>',methods=['POST'])
+@app.route(f'{root}/deleteComment/user/<user>',methods=['POST'])
 def deleteComments(user):
     cookie = request.cookies.get("MM_AUTH")
     user =  Users.select().where(Users.authCookie == cookie).get().username
