@@ -1,5 +1,6 @@
 from Controllers.Elements.xml import Element
 from Controllers.Database.Slot import Slots,HeartedSlots
+from Controllers.Database.Comment import Comments
 from datetime import timedelta, date
 from peewee import fn
 class Slotsx:
@@ -16,7 +17,12 @@ class Slotsx:
             slots = (Slots.select(Slots).order_by(fn.Random()).limit(pageSize).offset(pageStart))
         elif typex == "search":
             slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.name.contains(name)).limit(pageSize).offset(pageStart))
+        elif typex == "date":
+            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.firstPublished>=name).limit(pageSize).offset(pageStart))
+        elif typex == "hearted":
+            slots = (Slots.select(Slots).order_by(Slots.heartCount.desc()).where(Slots.firstPublished>=name).limit(pageSize).offset(pageStart))
 
+        
         slotsXml =''
         final = ''
         count = 0
@@ -40,6 +46,10 @@ class Slotsx:
             finalLinks = Element.taggedElem("slot","type","user",linkss)
 
             heartC = (HeartedSlots.select(HeartedSlots.slotId).where(HeartedSlots.slotId==r.id).count())
+
+            comments = (Comments
+                .select(Comments)
+                .where(Comments.toUser==name)).count()
 
             # +Element.createElem("links",r[14])
             
@@ -78,19 +88,22 @@ class Slotsx:
                     +Element.createElem("lbp1UniquePlayCount",r.lbp1UniquePlayCount)\
                     +Element.createElem("lbp2PlayCount",r.lbp2PlayCount)\
                     +Element.createElem("lbp2CompletionCount",r.lbp2CompletionCount)\
-                    +Element.createElem("uniquePlayCount",r.uniquePlayCount)\
+                    +Element.createElem("lbp2uniquePlayCount",r.uniquePlayCount)\
                     +Element.createElem("lbp3PlayCount",r.lbp3PlayCount)\
                     +Element.createElem("lbp3CompletionCount",r.lbp3CompletionCount)\
                     +Element.createElem("lbp3UniquePlayCount",r.lbp3UniquePlayCount)\
-                    +Element.createElem("reviewsEnabled",r.reviewsEnabled)\
+                    +Element.createElem("reviewsEnabled","true")\
+                    +Element.createElem("reviewCount","0")\
+                    +Element.createElem("yourReview","0")\
                     +Element.createElem("commentsEnabled",r.commentsEnabled)\
                     +Element.createElem("publishedIn",r.publishedIn)\
                     +Element.createElem("firstPublished",r.firstPublished)\
                     +Element.createElem("lastUpdated",r.lastUpdated)\
                     +Element.createElem("authorPhotoCount",r.authorPhotoCount)\
                     +Element.createElem("photoCount",r.photoCount)\
+                    +Element.createElem("commentCount",comments)\
                     +Element.createElem("yourlbp1PlayCount","0")\
-                    +Element.createElem("yourlbp2PlayCount",r"0")\
+                    +Element.createElem("yourlbp2PlayCount","0")\
 
             final += Element.taggedElem("slot","type","user",slotsXml)       
         
