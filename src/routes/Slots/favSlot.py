@@ -2,7 +2,6 @@ root = "/LITTLEBIGPLANETPS3_XML"
 from Controllers.Database.User import Users
 from Controllers.Database.Slot import HeartedSlots,Slots
 from Controllers.Misc.genSlot import Slotsx
-
 from Controllers.Elements.xml import Element
 from flask import request,Response
 from Controllers.Misc.misc import *
@@ -64,6 +63,7 @@ def unFav(ids):
     .update({Slots.heartCount: Slots.heartCount-1})
     .where(Slots.id==ids))
     d = HeartedSlots.delete().where(HeartedSlots.slotId==ids).where(HeartedSlots.username==User.username)
+    
     d.execute()
     Slot.execute()
     return Response(status=200)

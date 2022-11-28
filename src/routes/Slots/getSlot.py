@@ -1,7 +1,9 @@
 root = "/LITTLEBIGPLANETPS3_XML"
-from Controllers.Database.Slot import Slots
+from Controllers.Database.Comment import Comments
+from Controllers.Database.Slot import Slots,HeartedSlots
 from Controllers.Database.User import Users
 from Controllers.Database.Queue import Queue
+from Controllers.Database.Score import Scores
 from Controllers.Elements.xml import Element
 from Controllers.Misc.genSlot import Slotsx
 from Controllers.Misc.misc import Misc
@@ -221,6 +223,17 @@ def getSlots(type):
 @app.route(f"{root}/unpublish/<id>",methods=["POST"])
 def delSlot(id):
     ee = Slots.get_by_id(id)
+
+    commentsDelete = Comments.delete().where(Comments.toUser==id)
+    heartDelete = HeartedSlots.delete().where(HeartedSlots.slotId==id)
+    queueDelete = Queue.delete().where(Queue.slotId==id)
+    scoreDelete = Scores.delete().where(Scores.slotId==id)
+
+
+    scoreDelete.execute()
+    queueDelete.execute()
+    commentsDelete.execute()
+    heartDelete.execute()
     # ee = Slots.delete().where
 
     ee.delete_instance(recursive=True)
