@@ -2,6 +2,7 @@ from Controllers.Database.User import Users,heartedUser
 from Controllers.Database.Slot import HeartedSlots
 from Controllers.Database.Photo import UserPhoto
 from Controllers.Database.Comment import Comments
+from Controllers.Database.Queue import Queue
 from Controllers.Elements.xml import Element
 
 
@@ -12,7 +13,7 @@ class GeneratedUser:
 
         comments = (Comments
         .select(Comments)
-        .where(Comments.toUser==name)).count()
+        .where(Comments.toUser==name).count())
 
         favSlots = (HeartedSlots
             .select(HeartedSlots)
@@ -29,6 +30,10 @@ class GeneratedUser:
         photosCount = (UserPhoto
             .select(UserPhoto.username)
             .where(UserPhoto.username==name).count())
+    
+        queueCount = (Queue
+            .select(Queue.player)
+            .where(Queue.player==name).count())
         
         location = Element.createElem("x",user.locationX)\
             +Element.createElem("y",user.locationY)
@@ -73,6 +78,8 @@ class GeneratedUser:
         final += finalResult
         final += Element.createElem("favouriteSlotCount",favSlots)
         final += Element.createElem("favouriteUserCount",userCount)
+        final += Element.createElem("lolcatftwCount",queueCount)
+
 
         final += Element.createElem("pins",user.pins)
 

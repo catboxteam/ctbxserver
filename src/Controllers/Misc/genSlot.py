@@ -20,7 +20,7 @@ class Slotsx:
         elif typex == "date":
             slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.firstPublished>=name).limit(pageSize).offset(pageStart))
         elif typex == "hearted":
-            slots = (Slots.select(Slots).order_by(Slots.heartCount.desc()).where(Slots.firstPublished>=name).limit(pageSize).offset(pageStart))
+            slots = (Slots.select(Slots).order_by(Slots.heartCount.desc()).limit(pageSize).offset(pageStart))
 
         
         slotsXml =''

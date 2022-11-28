@@ -4,12 +4,26 @@ from Controllers.Database.Slot import HeartedSlots,Slots
 from Controllers.Misc.genSlot import Slotsx
 
 from Controllers.Elements.xml import Element
-from Controllers.Misc.misc import Misc
 from flask import request,Response
 from Controllers.Misc.misc import *
+from Controllers.Database.Queue import Queue
 import xml.etree.ElementTree as ET
 from __main__ import app
 import io 
+
+#wtf
+@app.route(f"{root}/lolcatftw/add/user/<slotId>",methods=["POST"])
+def addlolcat(slotId):
+    cookie = request.cookies.get("MM_AUTH")
+    User = Users.select().where(Users.authCookie == cookie).get()
+    
+    q = Queue()
+    q.player = User.username
+    q.slotId = slotId
+    q.save()
+    return Response(status=200)
+
+
 
 @app.route(f"{root}/favouriteSlots/<user>",methods=["GET"])
 def getFav(user):

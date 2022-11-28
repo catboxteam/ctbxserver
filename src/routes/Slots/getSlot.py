@@ -1,6 +1,7 @@
 root = "/LITTLEBIGPLANETPS3_XML"
 from Controllers.Database.Slot import Slots
 from Controllers.Database.User import Users
+from Controllers.Database.Queue import Queue
 from Controllers.Elements.xml import Element
 from Controllers.Misc.genSlot import Slotsx
 from Controllers.Misc.misc import Misc
@@ -128,6 +129,33 @@ def getSlotsid(typex):
 
 # @app.route(f"{root}/slots/",methods=["GET"])
 
+@app.route(f"{root}/slots/lolcatftw/<user>",methods=["GET"])
+def getlolcat(user):
+    pageStart = int(request.args.get("pageStart"))-1
+    pageSize = request.args.get("pageSize")
+
+    getFav = (Queue.select().where(Queue.player==user))
+    f =''
+    for i in getFav.objects():
+        f += Slotsx.genSlot("id",i.slotId,pageSize,pageStart)
+    dd = Element.taggedElem2("slots","total","hint_start",122,122,f)
+
+    return Response(response=dd, status=200, mimetype="application/xml")
+
+
+@app.route(f"{root}/lolcatftw/remove/user/<id>",methods=["POST"])
+def removelolcat(id):
+    cookie = request.cookies.get("MM_AUTH")
+    User = Users.select().where(Users.authCookie == cookie).get()
+
+    d = Queue.delete().where(Queue.player==User.username).where(Queue.slotId==id)
+
+    d.execute()
+    return Response(status=200)
+
+
+
+
 @app.route(f"{root}/slots",methods=["GET"])
 def get():
     pageStart = int(request.args.get("pageStart"))-1
@@ -177,14 +205,12 @@ def getSlots(type):
                     date1 = date.today() + timedelta(days=-7)
 
                 convert = time.mktime(date1.timetuple()) * 1000
+
                 typeSlot = S.genSlot("date",int(convert),pageSize,pageStart)
             else:
-                print("test")
+                typeSlot = S.genSlot("hearted",None,pageSize,pageStart)
         case _:
             print(f"Not found")
-    # EndDate = date.today() + timedelta(days=-31)
-    # timez = time.mktime(EndDate.timetuple()) * 1000
-
 
     finalSlot = Element.taggedElem2("slots","total","hint_start",pageStart + pageSize,pageStart,typeSlot)
 
