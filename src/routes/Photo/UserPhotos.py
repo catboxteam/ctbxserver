@@ -75,19 +75,32 @@ def upload():
     return Response(response=r, status=200, mimetype="application/xml")
 
 
-@app.route(f'{root}/photos/by',methods=['GET'])
-def getPhotos():
+@app.route(f'{root}/photos/<type>',methods=['GET'])
+def getPhotos(type):
     by = request.args.get('user')
     pageStart = int(request.args.get("pageStart")) -1
     pageSize = int(request.args.get("pageSize"))
+    
+    cc = ''
 
-    cc = (UserPhoto
-        .select()
-        .where(UserPhoto.username==by)
-        .order_by(UserPhoto.timestamp.desc())
-        .limit(pageSize)
-        .offset(pageStart)
-    )
+    match type:
+        case "by":
+            cc = (UserPhoto
+            .select()
+            .where(UserPhoto.username==by)
+            .order_by(UserPhoto.timestamp.desc())
+            .limit(pageSize)
+            .offset(pageStart))
+        case "with":
+            cc = (UserPhoto
+            .select()
+            .where(UserPhoto.username!=by)
+            .where(UserPhoto.subjects.contains(by))
+            .order_by(UserPhoto.timestamp.desc())
+            .limit(pageSize)
+            .offset(pageStart))
+        
+
     f = ''
     for i in cc:
         f += Photo.genPhoto(i.id)
