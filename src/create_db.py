@@ -4,7 +4,9 @@ from Controllers.Database.Slot import *
 from Controllers.Database.Photo import *
 from Controllers.Database.Score import *
 from Controllers.Database.Queue import *
+from Controllers.Database.Review import *
 
 
-db.create_tables([Users,Comments,UserPhoto,heartedUser,HeartedSlots,Slots,Scores,Queue])
+
+db.create_tables([Users,Comments,UserPhoto,heartedUser,HeartedSlots,Slots,Scores,Queue,Reviews])
 # Users.create(username='admin')

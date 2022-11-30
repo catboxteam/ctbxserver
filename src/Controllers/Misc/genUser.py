@@ -1,7 +1,7 @@
-from Controllers.Database.User import Users,heartedUser
 from Controllers.Database.Slot import HeartedSlots,Slots
-from Controllers.Database.Photo import UserPhoto
+from Controllers.Database.User import Users,heartedUser
 from Controllers.Database.Comment import Comments
+from Controllers.Database.Photo import UserPhoto
 from Controllers.Database.Queue import Queue
 from Controllers.Elements.xml import Element
 

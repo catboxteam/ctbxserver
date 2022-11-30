@@ -3,10 +3,5 @@ import re
 
 class parseTicket:
     def __init__(self, tickets):
-        buffer = BytesIO()
-        ticket = bytes(tickets)
-        buffer.write(ticket)
-
-        buffer.seek(84)
-        b = buffer.read(20).decode()
-        self.username = re.sub('[^!-~]+',' ',b).strip()
+        usr = tickets[84:][:20].rstrip(b'\x00').decode()
+        self.username = usr

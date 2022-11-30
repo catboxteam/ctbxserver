@@ -6,10 +6,9 @@ root = "/LITTLEBIGPLANETPS3_XML"
 @app.route(f'{root}/login',methods=['POST'])
 def login():
     ticket = parseTicket.parseTicket(request.data)
-    ap = genAuth.Ticket()
-    auth = ap.genAuth(ticket.username)
-    print(auth)
-    return Response(auth,status=200, mimetype='text/xml')
+    gen = genAuth.Ticket()
+    
+    return Response(gen.genAuth(ticket.username),status=200, mimetype='text/xml')
 
 @app.route(f'{root}/eula',methods=['GET'])
 def eula():
