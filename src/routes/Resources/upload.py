@@ -1,14 +1,23 @@
 root = "/LITTLEBIGPLANETPS3_XML"
 from flask import request,Response
+from  Controllers.Misc.Files import LBPFile
 from __main__ import app
-
+import imghdr
+import io
 @app.route(f"{root}/upload/<sha1>",methods=["POST"])
 def Upload(sha1):
     try:
-        open(f"r/{sha1}","wb").write(request.data)
+        fileUpload = request.data
+        file = LBPFile(fileUpload)
+        isSafe = file.safeFile()
+        if isSafe:
+            open(f"r/{sha1}","wb").write(fileUpload)
+
+        print(f"{sha1} (Type: {file.fileType} isSafe: {isSafe})")
         return Response(status=200)
     except Exception as e:
-        print(e)
+        print(f"UPLOAD.PY {e}")
+        # print(request.data)
         return Response(status=404)
 
 

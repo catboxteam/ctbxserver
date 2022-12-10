@@ -27,6 +27,8 @@ def Update():
                 User.iconHash = c.text
             case "planets":
                 User.planetHash = c.text
+            case "yay2":
+                User.yayHash = c.text
             case _:
                 print(f"Tag not found ",c.tag,c.text)
                 return Response(status=404)
@@ -50,7 +52,7 @@ def Pins():
 def filter():
     data = request.data.decode()
     print(data)
-    return Response(status=200)
+    return Response(data,status=200)
 
 @app.route(f'{root}/showNotUploaded',methods=["POST"])
 def notUploaded():

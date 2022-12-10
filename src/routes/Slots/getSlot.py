@@ -19,7 +19,8 @@ import io
 def startPublish():
     startPub = Misc.timestamp()
 
-    data = request.stream.read().decode()
+    # data = request.stream.read().decode()
+    data = request.data.decode()
     cookie = request.cookies.get("MM_AUTH")
     f = io.StringIO(data)
     tree = ET.parse(f)

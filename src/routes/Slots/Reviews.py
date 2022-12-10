@@ -46,13 +46,23 @@ def gen(id):
 @app.route(f"{root}/postReview/user/<slotId>",methods=["POST"])
 def postReview(slotId):
     cookie = request.cookies.get("MM_AUTH")
+    User = Users.select().where(Users.authCookie == cookie).get().username
     data = request.stream.read().decode()
     f = io.StringIO(data)
     tree = ET.parse(f)
     root = tree.getroot()
-    
-    createReview = Reviews()
-    createReview.username = Users.select().where(Users.authCookie == cookie).get().username
+
+
+
+    c = Reviews.select().where(Reviews.slotId==slotId).where(Reviews.username==User)
+    if c.exists():
+        print("ex")
+        createReview = Reviews()
+        createReview.username = User
+    else:
+        createReview  = Reviews(username=User)
+
+
     createReview.slotId = slotId
     createReview.timestamp = Misc.timestamp()
 
@@ -65,26 +75,37 @@ def postReview(slotId):
             case "text":
                 createReview.text = c.text
     createReview.save()
-                
+    return Response(status=200) 
+
+
 @app.route(f"{root}/reviewsFor/user/<slotid>",methods=["GET"])
 def rev(slotid):
-
+    cookie = request.cookies.get("MM_AUTH")
+    User = Users.select().where(Users.authCookie == cookie).get().username
     c = (Reviews
         .select()
         .where(Reviews.slotId==slotid))
-    f = f"""
-    <review id="{slotid}.Seconder45">
-        <slot_id type="user">{slotid}</slot_id>
-        <reviewer>Seconder45</reviewer>
-        <thumb>1</thumb>
-        <timestamp>1343916636355</timestamp>
-        <deleted>false</deleted>
-        <deleted_by>none</deleted_by>
-        <text>Edit to post review</text>
-        <thumbsup>0</thumbsup>
-        <thumbsdown>0</thumbsdown>
-        <yourthumb>0</yourthumb>
-    </review>"""
+
+
+
+    
+    if c.where(Reviews.username==User).exists():
+        f = ''
+    else:
+        f = f"""
+        <review id="{slotid}.{User}">
+            <slot_id type="user">{slotid}</slot_id>
+            <reviewer>Seconder45</reviewer>
+            <thumb>1</thumb>
+            <timestamp>1343916636355</timestamp>
+            <deleted>false</deleted>
+            <deleted_by>none</deleted_by>
+            <text>Edit to post review</text>
+            <thumbsup>0</thumbsup>
+            <thumbsdown>0</thumbsdown>
+            <yourthumb>0</yourthumb>
+        </review>"""
+
     for i in c:
         f += gen(i.id)
 
