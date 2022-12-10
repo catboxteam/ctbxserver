@@ -1,6 +1,7 @@
 root = "/LITTLEBIGPLANETPS3_XML"
 from Controllers.Database.Comment import Comments
 from Controllers.Database.Slot import Slots,HeartedSlots
+from Controllers.Database.Review import Reviews
 from Controllers.Database.User import Users
 from Controllers.Database.Queue import Queue
 from Controllers.Database.Score import Scores
@@ -229,12 +230,14 @@ def delSlot(id):
     heartDelete = HeartedSlots.delete().where(HeartedSlots.slotId==id)
     queueDelete = Queue.delete().where(Queue.slotId==id)
     scoreDelete = Scores.delete().where(Scores.slotId==id)
+    reviewsDelete = Reviews.delete().where(Reviews.slotId==id)
 
 
     scoreDelete.execute()
     queueDelete.execute()
     commentsDelete.execute()
     heartDelete.execute()
+    reviewsDelete.execute()
     # ee = Slots.delete().where
 
     ee.delete_instance(recursive=True)
