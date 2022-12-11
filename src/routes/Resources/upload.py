@@ -11,7 +11,8 @@ def Upload(sha1):
         file = LBPFile(fileUpload)
         isSafe = file.safeFile()
         if isSafe:
-            open(f"r/{sha1}","wb").write(fileUpload)
+            f = open(f"r/{sha1}","wb").write(fileUpload)
+
 
         print(f"{sha1} (Type: {file.fileType} isSafe: {isSafe})")
         return Response(status=200)

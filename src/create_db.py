@@ -9,4 +9,5 @@ from Controllers.Database.Review import *
 
 
 db.create_tables([Users,Comments,UserPhoto,heartedUser,HeartedSlots,Slots,Scores,Queue,Reviews])
-# Users.create(username='admin')
+# for i in range(1,200):
+#     Users.create(username=f'admi1ni{i}')

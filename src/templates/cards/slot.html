@@ -1,0 +1,19 @@
+<style>
+    .card {
+  background: hsla(0, 0%, 8%, 0.7);
+  /* box-shadow: 0 8px 20px 0 rgb(11, 9, 19);   */
+}
+</style>
+{% for i in slots %}
+<div class="card" style="max-width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title d-inline-block text-truncate" style="max-width: 220px;">{{i.name}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{i.username}}</h6>
+      
+      <!-- <p class="card-text text d-inline-block text-truncate" style="max-width: 250px;">{{i.description}}</p> -->
+    </div>
+    <div class="card-footer">
+        <small class="text-muted">Last updated 3 mins ago</small>
+    </div>
+</div>
+{% endfor %}
