@@ -4,52 +4,38 @@ from Controllers.Elements.xml import Element
 from peewee import fn,JOIN
 class Slotsx:
     def genSlot(typex,name,pageSize,pageStart):
-
-        slots = ''
-        if typex == "user":
-            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.username==name).limit(pageSize).offset(pageStart))
-        elif typex == "id":
-            slots = (Slots.select(Slots).order_by(Slots.id.desc()).where(Slots.id==int(name)))
-        elif typex == "mmpick":
-            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.mmpick==True).limit(pageSize).offset(pageStart))
-        elif typex == "random":
-            slots = (Slots.select(Slots).order_by(fn.Random()).limit(pageSize).offset(pageStart))
-        elif typex == "search":
-            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.name.contains(name)).limit(pageSize).offset(pageStart))
-        elif typex == "date":
-            slots = (Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.firstPublished>=name).limit(pageSize).offset(pageStart))
-        elif typex == "hearted":
-            slots = (Slots.select(Slots).order_by(Slots.heartCount.desc()).limit(pageSize).offset(pageStart))
-
         
-        slotsXml =''
+        query_map = {
+            "user": lambda: Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.username==name).limit(pageSize).offset(pageStart),
+            "id": lambda: Slots.select(Slots).order_by(Slots.id.desc()).where(Slots.id==int(name)),
+            "mmpick": lambda: Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.mmpick==True).limit(pageSize).offset(pageStart),
+            "random": lambda: Slots.select(Slots).order_by(fn.Random()).limit(pageSize).offset(pageStart),
+            "search": lambda: Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.name.contains(name)).limit(pageSize).offset(pageStart),
+            "date": lambda: Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.firstPublished>=name).limit(pageSize).offset(pageStart),
+            "hearted": lambda: Slots.select(Slots).order_by(Slots.heartCount.desc()).limit(pageSize).offset(pageStart),
+        }
+        slots = query_map.get(typex, lambda: Slots.select(Slots))()
+
         final = ''
         count = 0
         for r in slots:
             count +=1
-            l =Element.createElem("x",r.locationX)\
-                    +Element.createElem("y",r.locationY)\
+            l = Element.createElem("x", r.locationX) + Element.createElem("y", r.locationY)
+            location = Element.createElem("location", l)
 
-            
-            location = Element.createElem("location",l)
-            rez = ''
-            res = str(r.resource).split(";")
-            for i in res:
-                rez += Element.createElem("resource",i)
 
-            linkss = ''
+            res = r.resource.split(";")
+            resource = ''.join(Element.createElem("resource",i) for i in res)
+
             link = str(r.links).split(";")
-            for i in link:
-                linkss += Element.createElem("id",i)
+            linkss = ''.join(Element.createElem("id", i) for i in link)
+
             
             finalLinks = Element.taggedElem("slot","type","user",linkss)
 
-            heartC = (HeartedSlots.select(HeartedSlots.slotId).where(HeartedSlots.slotId==r.id).count())
-
-            comments = (Comments
-                .select(Comments)
-                .where(Comments.toUser==name)).count()
-
+            heartC = len(HeartedSlots.select(HeartedSlots.slotId).where(HeartedSlots.slotId==r.id))
+            comments = len(Comments.select(Comments).where(Comments.toUser==name))
+        
             # +Element.createElem("links",r[14])
             
             slotsXml=Element.createElem("id",r.id)\
@@ -58,7 +44,7 @@ class Slotsx:
                     +Element.createElem("description",r.description)\
                     +Element.createElem("icon",r.icon)\
                     +Element.createElem("rootLevel",r.rootLevel)\
-                    +rez\
+                    +resource\
                     +location\
                     +Element.createElem("initiallyLocked",r.initiallyLocked)\
                     +Element.createElem("isSubLevel",r.isSubLevel)\

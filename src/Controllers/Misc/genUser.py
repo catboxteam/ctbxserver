@@ -12,53 +12,52 @@ class GeneratedUser:
         user = Users.get(username=name)
         
 
-        slots = (Slots
+        slots = len(Slots
         .select()
         .where(Slots.publishedIn=="lbp2")
-        .where(Slots.username==name).count())
+        .where(Slots.username==name))
 
-        allslots = (Slots
+        allslots = len(Slots
         .select()
-        .where(Slots.username==name).count())
+        .where(Slots.username==name))
 
-        comments = (Comments
+        comments = len(Comments
         .select(Comments)
-        .where(Comments.toUser==name).count())
+        .where(Comments.toUser==name))
 
-        favSlots = (HeartedSlots
+        favSlots = len(HeartedSlots
             .select(HeartedSlots)
-            .where(HeartedSlots.username==name).count())
+            .where(HeartedSlots.username==name))
 
-        userCount = (heartedUser
+        userCount = len(heartedUser
             .select(heartedUser.whoHearted)
-            .where(heartedUser.whoHearted==name).count())
+            .where(heartedUser.whoHearted==name))
 
-        heartCount = (heartedUser
+        heartCount = len(heartedUser
             .select(heartedUser.username)
-            .where(heartedUser.username==name).count())
+            .where(heartedUser.username==name))
 
-        photosCount = (UserPhoto
+        photosCount = len(UserPhoto
             .select(UserPhoto.username)
-            .where(UserPhoto.username==name).count())
+            .where(UserPhoto.username==name))
 
-        photoWithMeCount = (UserPhoto
+        photoWithMeCount = len(UserPhoto
             .select(UserPhoto.username)
             .where(UserPhoto.username!=name)
-            .where(UserPhoto.subjects.contains(name)).count())
+            .where(UserPhoto.subjects.contains(name)))
             
-        queueCount = (Queue
+        queueCount = len(Queue
             .select(Queue.player)
-            .where(Queue.player==name).count())
+            .where(Queue.player==name))
         
-        location = Element.createElem("x",user.locationX)\
-            +Element.createElem("y",user.locationY)
+        location = Element.createElem("x",user.locationX) + Element.createElem("y",user.locationY)
         finalResult = Element.createElem("location",location)
 
         final = Element.taggedElem("npHandle","icon",user.iconHash,user.username)
         final += Element.createElem("game","2")
         final += Element.createElem("lbp1UsedSlots","0")
         final += Element.createElem("entitledSlots","50")
-        final += Element.createElem("freeSlots",50-allslots) #AllSlots - usedSlots\
+        final += Element.createElem("freeSlots",50-allslots)
 
         final += Element.createElem("crossControlUsedSlots","0")
         final += Element.createElem("crossControlEntitledSlots","50")

@@ -8,13 +8,7 @@ class BaseModel(Model):
         db_table = 'slots'
 
 
-class HeartedSlots(Model):
-    id = PrimaryKeyField(unique=True)
-    username = TextField()
-    slotId = IntegerField(null=True,default=0)
-    class Meta:
-        database = db
-        db_table = "favslots"
+
 
 class Slots(BaseModel):
     id = PrimaryKeyField(unique=True)
@@ -69,13 +63,7 @@ class Slots(BaseModel):
     commentsEnabled = BooleanField(default=False)
 
     publishedIn = IntegerField(default="lbp2")
-
-
-
-
     uniquePlayCount = IntegerField(default=0)
-
-
 
 
 
@@ -85,16 +73,12 @@ class Slots(BaseModel):
     isAdventurePlanet = BooleanField(default=False)
     authorPhotoCount = IntegerField(default=0)
     photoCount = IntegerField(default=0)
-    
 
 
-
-
-
-
-
-
-
-
-
-
+class HeartedSlots(Model):
+    id = PrimaryKeyField(unique=True)
+    username = TextField()
+    slotId = IntegerField(null=True,default=0)
+    class Meta:
+        database = db
+        db_table = "favslots"
