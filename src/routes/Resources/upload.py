@@ -1,6 +1,6 @@
 root = "/LITTLEBIGPLANETPS3_XML"
 from flask import request,Response
-from  Controllers.Misc.Files import LBPFile
+from  Controllers.Misc.Files import LBPFile,fileType
 from __main__ import app
 import imghdr
 import io
@@ -12,7 +12,12 @@ def Upload(sha1):
         isSafe = file.safeFile()
         if isSafe:
             f = open(f"r/{sha1}","wb").write(fileUpload)
+        else:
+            return Response(status=404)
 
+
+        if file.fileType == fileType.Texture:
+            file.decompressFile(sha1)
 
         print(f"{sha1} (Type: {file.fileType} isSafe: {isSafe})")
         return Response(status=200)

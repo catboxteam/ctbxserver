@@ -67,7 +67,7 @@ def upload():
             createPhoto.name = slot.find("name").text
 
 
-    print(data)
+    # print(data)
     createPhoto.save()
     
     idReturn = Element.createElem("id",createPhoto.id)

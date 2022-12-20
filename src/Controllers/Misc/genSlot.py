@@ -1,7 +1,7 @@
 from Controllers.Database.Slot import Slots,HeartedSlots
 from Controllers.Database.Comment import Comments
 from Controllers.Elements.xml import Element
-from peewee import fn
+from peewee import fn,JOIN
 class Slotsx:
     def genSlot(typex,name,pageSize,pageStart):
 
