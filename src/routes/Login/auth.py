@@ -1,6 +1,9 @@
 from flask import request,Response
 from __main__ import app
 from Controllers.Tickets import genAuth,parseTicket
+from Controllers.Elements.xml import Element
+import xml.etree.ElementTree as ET
+import io
 
 root = "/LITTLEBIGPLANETPS3_XML"
 @app.route(f'{root}/login',methods=['POST'])
@@ -42,3 +45,19 @@ def notification():
 @app.route(f'{root}/playersInPodCount',methods=['GET'])
 def playersInPodCount():
     return Response("1",status=200, mimetype='text/plain')
+
+
+@app.route(f'{root}/npdata',methods=['POST'])
+def npdata():
+    data = request.data.decode()
+    f = io.StringIO(data)
+    tree = ET.parse(f)
+    root = tree.getroot()
+
+    elem = ''
+    for i in root.iter("npHandle"):
+        elem += Element.createElem("npHandle",i.text)
+
+    ff = Element.createElem("friends",elem)
+
+    return Response(Element.createElem("npdata",ff),status=200, mimetype='text/plain')
