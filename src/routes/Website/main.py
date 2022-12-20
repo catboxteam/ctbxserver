@@ -7,8 +7,10 @@ from Controllers.Database.Slot import Slots
 
 @app.route("/")
 def index():
-    slotss = Slots.select().limit(4)
-    return render_template('index.html',slots=slotss)
+    slotss = Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.mmpick==True).limit(4)
+    new = Slots.select(Slots).order_by(Slots.publishedIn.desc()).limit(4)
+
+    return render_template('index.html',slots=slotss,newSlots=new)
 
 @app.route("/users/<int:page>")
 def usr(page):

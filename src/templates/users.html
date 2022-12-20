@@ -11,7 +11,11 @@ Users
         <div class="card-body">
             <h5 class="card-title">{{ i.username }}</h5>
             <p class="card-text">{{ i.biography }}</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <small class="text-muted">
+                <i class="fa-solid fa-heart"></i>
+                {{i.heartCount}}
+              </small>
+            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
         </div>
     </div>
     {% endfor %}
