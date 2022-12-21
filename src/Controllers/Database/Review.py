@@ -12,7 +12,7 @@ class Reviews(BaseModel):
     slotId = IntegerField(null=True,default=0)
     username = TextField()
     timestamp = IntegerField(null=True,default=0)
-    deleted = TextField(default="true")
+    deleted = TextField(default="false")
     deletedBy = TextField(unique=False,default="none")
     text = TextField(null=True)
     labels = TextField(null=True)

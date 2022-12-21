@@ -60,4 +60,4 @@ def npdata():
 
     ff = Element.createElem("friends",elem)
 
-    return Response(Element.createElem("npdata",ff),status=200, mimetype='text/plain')
+    return Response(Element.createElem("npdata",ff),status=200, mimetype='text/xml')

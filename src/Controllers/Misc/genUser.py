@@ -2,6 +2,7 @@ from Controllers.Database.Slot import HeartedSlots,Slots
 from Controllers.Database.User import Users,heartedUser
 from Controllers.Database.Comment import Comments
 from Controllers.Database.Photo import UserPhoto
+from Controllers.Database.Review import Reviews
 from Controllers.Database.Queue import Queue
 from Controllers.Elements.xml import Element
 
@@ -49,6 +50,10 @@ class GeneratedUser:
         queueCount = len(Queue
             .select(Queue.player)
             .where(Queue.player==name))
+
+        reviewCount = len(Reviews
+            .select(Reviews.id)
+            .where(Reviews.username==name))
         
         location = Element.createElem("x",user.locationX) + Element.createElem("y",user.locationY)
         finalResult = Element.createElem("location",location)
@@ -82,7 +87,7 @@ class GeneratedUser:
         final += Element.createElem("boo2",user.booHash)
         final += Element.createElem("meh2",user.booHash)
         final += Element.createElem("biography",user.biography)
-        final += Element.createElem("reviewCount",user.reviewCount)
+        final += Element.createElem("reviewCount",reviewCount)
         final += Element.createElem("commentCount",comments)
 
         final += Element.createElem("photosByMeCount",photosCount)

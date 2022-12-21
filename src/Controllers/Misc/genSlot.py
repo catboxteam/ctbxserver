@@ -1,5 +1,6 @@
 from Controllers.Database.Slot import Slots,HeartedSlots
 from Controllers.Database.Comment import Comments
+from Controllers.Database.Review import Reviews
 from Controllers.Elements.xml import Element
 from peewee import fn,JOIN
 class Slotsx:
@@ -35,7 +36,10 @@ class Slotsx:
 
             heartC = len(HeartedSlots.select(HeartedSlots.slotId).where(HeartedSlots.slotId==r.id))
             comments = len(Comments.select(Comments).where(Comments.toUser==name))
-        
+
+            reviewC = len(Reviews.select(Reviews.slotId).where(Reviews.slotId==r.id))
+            # yourReviewC = len(Reviews.select(Reviews.slotId).where(Reviews.slotId==r.id).where())
+
             # +Element.createElem("links",r[14])
             
             slotsXml=Element.createElem("id",r.id)\
@@ -78,7 +82,7 @@ class Slotsx:
                     +Element.createElem("lbp3CompletionCount",r.lbp3CompletionCount)\
                     +Element.createElem("lbp3UniquePlayCount",r.lbp3UniquePlayCount)\
                     +Element.createElem("reviewsEnabled","true")\
-                    +Element.createElem("reviewCount","0")\
+                    +Element.createElem("reviewCount",reviewC)\
                     +Element.createElem("yourReview","0")\
                     +Element.createElem("commentsEnabled",r.commentsEnabled)\
                     +Element.createElem("publishedIn",r.publishedIn)\

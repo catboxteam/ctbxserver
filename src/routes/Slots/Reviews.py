@@ -43,39 +43,32 @@ def gen(id):
 
     return final
 
+
+
 @app.route(f"{root}/postReview/user/<slotId>",methods=["POST"])
-def postReview(slotId):
+def createReview(slotId):
     cookie = request.cookies.get("MM_AUTH")
-    User = Users.select().where(Users.authCookie == cookie).get().username
+    user = Users.select().where(Users.authCookie == cookie).get().username
     data = request.stream.read().decode()
     f = io.StringIO(data)
     tree = ET.parse(f)
     root = tree.getroot()
+    
 
-
-
-    c = Reviews.select().where(Reviews.slotId==slotId).where(Reviews.username==User)
-    if c.exists():
-        print("ex")
-        createReview = Reviews()
-        createReview.username = User
-    else:
-        createReview  = Reviews(username=User)
-
-
-    createReview.slotId = slotId
-    createReview.timestamp = Misc.timestamp()
+    review, created = Reviews.get_or_create(username=user, slotId=slotId)
+    review.timestamp = Misc.timestamp()
 
     for c in root:
-        match c.tag:
-            case "thumb":
-                createReview.thumb = c.text
-            case "labels":
-                createReview.labels = c.text
-            case "text":
-                createReview.text = c.text
-    createReview.save()
-    return Response(status=200) 
+        tag = c.tag
+        text = c.text
+        if tag == "thumb":
+            review.thumb = text
+        elif tag == "labels":
+            review.labels = text
+        elif tag == "text":
+            review.text = text
+    review.save()
+    return Response(status=200)
 
 
 @app.route(f"{root}/reviewsFor/user/<slotid>",methods=["GET"])
@@ -95,7 +88,7 @@ def rev(slotid):
         f = f"""
         <review id="{slotid}.{User}">
             <slot_id type="user">{slotid}</slot_id>
-            <reviewer>Seconder45</reviewer>
+            <reviewer>{User}</reviewer>
             <thumb>1</thumb>
             <timestamp>1343916636355</timestamp>
             <deleted>false</deleted>
@@ -106,6 +99,21 @@ def rev(slotid):
             <yourthumb>0</yourthumb>
         </review>"""
 
+    for i in c:
+        f += gen(i.id)
+
+    rev = Element.createElem("reviews",f)
+
+    print("test")
+    return Response(rev,status=200, mimetype='text/xml') 
+
+
+@app.route(f"{root}/reviewsBy/<username>",methods=["GET"])
+def revBy(username):
+    c = (Reviews
+        .select()
+        .where(Reviews.username==username))
+    f =''
     for i in c:
         f += gen(i.id)
 

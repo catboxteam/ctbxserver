@@ -90,3 +90,11 @@ def deleteComments(user):
     comment.save()
 
     return Response(status=200)
+
+
+
+@app.route(f'{root}/rateComment/user/<slotId>',methods=['POST'])
+def rateComment(slotId):
+    commentId = request.args.get("commentId")
+    rating = request.args.get("rating")
+    print(commentId,rating)
