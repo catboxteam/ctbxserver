@@ -12,8 +12,8 @@ class Photo:
         final = ''
         global slotType
         for i in p:
-            cf = Element.createElem("id",i.slotId)
-            slotType = Element.taggedElem("slot","type","developer",cf)
+            cf = Element.createElem("id",i.slotId)+Element.createElem("name",i.name)+Element.createElem("description","epic")
+            slotType = Element.taggedElem("slot","type","user",cf)
             # d = cf+Element.createElem("name",i.name)\
             #     +Element.createElem("description","test")
             photos += Element.createElem("id",i.id)
@@ -22,6 +22,9 @@ class Photo:
             photos += Element.createElem("medium",i.mediumHash)
             photos += Element.createElem("large",i.largeHash)
             photos += Element.createElem("plan",i.planHash)
+            photos += slotType
+
+
             if i.subjects != "<subjects></subjects>":
                 photos += i.subjects
 
@@ -30,7 +33,6 @@ class Photo:
             # else:
             #     slotType = Element.taggedElem("slot","type","developer",d)
             # slotType = Element.taggedElem("slot","type","user",cf)
-            photos += slotType
 
 
             # photos = Element.createElem("id",i.id)\

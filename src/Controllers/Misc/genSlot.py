@@ -1,6 +1,7 @@
 from Controllers.Database.Slot import Slots,HeartedSlots
 from Controllers.Database.Comment import Comments
 from Controllers.Database.Review import Reviews
+from Controllers.Database.Photo import UserPhoto
 from Controllers.Elements.xml import Element
 from peewee import fn,JOIN
 class Slotsx:
@@ -38,6 +39,7 @@ class Slotsx:
             comments = len(Comments.select(Comments).where(Comments.toUser==name))
 
             reviewC = len(Reviews.select(Reviews.slotId).where(Reviews.slotId==r.id))
+            photoC = len(UserPhoto.select(UserPhoto.slotId).where(UserPhoto.slotId==r.id))
             # yourReviewC = len(Reviews.select(Reviews.slotId).where(Reviews.slotId==r.id).where())
 
             # +Element.createElem("links",r[14])
@@ -89,7 +91,7 @@ class Slotsx:
                     +Element.createElem("firstPublished",r.firstPublished)\
                     +Element.createElem("lastUpdated",r.lastUpdated)\
                     +Element.createElem("authorPhotoCount",r.authorPhotoCount)\
-                    +Element.createElem("photoCount",r.photoCount)\
+                    +Element.createElem("photoCount",photoC)\
                     +Element.createElem("commentCount",comments)\
                     +Element.createElem("yourlbp1PlayCount","0")\
                     +Element.createElem("yourlbp2PlayCount","0")\

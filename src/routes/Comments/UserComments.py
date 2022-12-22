@@ -98,3 +98,4 @@ def rateComment(slotId):
     commentId = request.args.get("commentId")
     rating = request.args.get("rating")
     print(commentId,rating)
+    return Response(status=200)

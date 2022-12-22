@@ -18,3 +18,6 @@ class Comments(BaseModel):
     isDeleted = BooleanField(default=False)
     deletedType = TextField(null=True)
     deletedUser = TextField(null=True)
+    up = IntegerField(default=0)
+    down = IntegerField(default=0)
+    

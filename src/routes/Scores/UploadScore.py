@@ -39,11 +39,13 @@ def getScore(slotId,players):
       .where(Scores.slotId==slotId))
 
     g = ''
+    count = 0
     for i in get:
+      count+=1
       g+= test(i.id)
 
   
-    dd = Element.taggedElem("scores","totalNumScores",800,g)
+    dd = Element.taggedElem("scores","totalNumScores",count,g)
 
     return Response(dd,status=200, mimetype='text/xml')
 
@@ -56,8 +58,7 @@ def uploadScore(slotId):
     tree = ET.parse(f)
     root = tree.getroot()
 
-    sc = Scores()
-    sc.slotId = slotId
+    sc = Scores(slotId=slotId)
 
     for child in root:
         match child.tag:
@@ -73,10 +74,10 @@ def uploadScore(slotId):
     sc.save()
 
     print(request.data.decode())
+    # return Response(fff,status=200, mimetype='text/xml')
     # <playRecord>
     # <host>true</host>
     # <type>1</type>
     # <playerIds>Seconder45</playerIds>
     # <score>1800</score>
     # </playRecord>
-    # return Response(fff,status=200, mimetype='text/xml')

@@ -29,6 +29,8 @@ def Update():
                 User.planetHash = c.text
             case "yay2":
                 User.yayHash = c.text
+            case "boo2":
+                User.booHash = c.text
             case _:
                 print(f"Tag not found ",c.tag,c.text)
                 return Response(status=404)

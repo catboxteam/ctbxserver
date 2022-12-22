@@ -23,18 +23,22 @@ def startPublish():
     # data = request.stream.read().decode()
     data = request.data.decode()
     cookie = request.cookies.get("MM_AUTH")
+    user = Users.select().where(Users.authCookie == cookie).get().username
     f = io.StringIO(data)
     tree = ET.parse(f)
     root = tree.getroot()
 
     resources = []
     links = []
+
+    # dd,c = Slots.get_or_create(id=root.find("id").text,username=user)    
     if root.find("id") == None:
         dd = Slots(username=Users.select().where(Users.authCookie == cookie).get().username)
         dd.firstPublished = startPub
     else:
         dd = Slots.select().where(Slots.id==root.find("id").text).get()
-    # dd.lastUpdated = startPub
+
+    dd.lastUpdated = startPub
     for child in root:
         match child.tag:
             case "name":
@@ -100,7 +104,14 @@ def startPublish():
                 print(f"Not found {child.tag} {child.text}")
 
     dd.lastUpdated = startPub
-    dd.save()
+
+
+    if user != dd.username:
+        print("waste of time")
+        return Response(status=403)
+    else:
+        dd.save()
+
     resourcesXml = ''
     for i in resources:
         if Misc.checkFile(i) != True:
@@ -110,6 +121,7 @@ def startPublish():
     output = Element.taggedElem("slot","type","user",resourcesXml)
     
     print("Generated resources")
+
     return Response(output,status=200, mimetype='text/xml')
 
 
@@ -185,19 +197,18 @@ def getSlots(type):
     search = request.args.get("query")
 
     typeSlot = ''
-    S = Slotsx
     date1 = ''
     match type:
         case "developer":
             print("WIP")
         case "by":
-            typeSlot = S.genSlot("user",by,pageSize,pageStart)
+            typeSlot = Slotsx.genSlot("user",by,pageSize,pageStart)
         case "lbp2luckydip":
-            typeSlot = S.genSlot("random",by,pageSize,pageStart)
+            typeSlot = Slotsx.genSlot("random",by,pageSize,pageStart)
         case "mmpicks":
-            typeSlot = S.genSlot("mmpick",by,pageSize,pageStart)
+            typeSlot = Slotsx.genSlot("mmpick",by,pageSize,pageStart)
         case "search":
-            typeSlot = S.genSlot("search",search,pageSize,pageStart)
+            typeSlot = Slotsx.genSlot("search",search,pageSize,pageStart)
         case "mostHearted":
 
             dateFilterType = request.args.get("dateFilterType")
@@ -210,9 +221,9 @@ def getSlots(type):
 
                 convert = time.mktime(date1.timetuple()) * 1000
 
-                typeSlot = S.genSlot("date",int(convert),pageSize,pageStart)
+                typeSlot = Slotsx.genSlot("date",int(convert),pageSize,pageStart)
             else:
-                typeSlot = S.genSlot("hearted",None,pageSize,pageStart)
+                typeSlot = Slotsx.genSlot("hearted",None,pageSize,pageStart)
         case _:
             print(f"Not found")
 
