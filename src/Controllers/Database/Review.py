@@ -10,7 +10,8 @@ class BaseModel(Model):
 class Reviews(BaseModel):
     id = PrimaryKeyField(unique=True)
     slotId = IntegerField(null=True,default=0)
-    username = TextField()
+    # username = TextField()
+    playerId = IntegerField(default=0)
     timestamp = IntegerField(null=True,default=0)
     deleted = TextField(default="false")
     deletedBy = TextField(unique=False,default="none")

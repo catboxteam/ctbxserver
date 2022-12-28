@@ -3,12 +3,13 @@ from Controllers.Database.Comment import Comments
 from Controllers.Database.Review import Reviews
 from Controllers.Database.Photo import UserPhoto
 from Controllers.Elements.xml import Element
+from Controllers.Misc.misc import Misc
 from peewee import fn,JOIN
 class Slotsx:
     def genSlot(typex,name,pageSize,pageStart):
         
         query_map = {
-            "user": lambda: Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.username==name).limit(pageSize).offset(pageStart),
+            "user": lambda: Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.playerId==Misc.playerToId(name)).limit(pageSize).offset(pageStart),
             "id": lambda: Slots.select(Slots).order_by(Slots.id.desc()).where(Slots.id==int(name)),
             "mmpick": lambda: Slots.select(Slots).order_by(Slots.publishedIn.desc()).where(Slots.mmpick==True).limit(pageSize).offset(pageStart),
             "random": lambda: Slots.select(Slots).order_by(fn.Random()).limit(pageSize).offset(pageStart),
@@ -45,7 +46,7 @@ class Slotsx:
             # +Element.createElem("links",r[14])
             
             slotsXml=Element.createElem("id",r.id)\
-                    +Element.createElem("npHandle",r.username)\
+                    +Element.createElem("npHandle",Misc.idToPlayer(r.playerId))\
                     +Element.createElem("name",r.name)\
                     +Element.createElem("description",r.description)\
                     +Element.createElem("icon",r.icon)\
@@ -70,7 +71,7 @@ class Slotsx:
                     +Element.createElem("averageRating",r.averageRating)\
                     +Element.createElem("playerCount",r.playerCount)\
                     +Element.createElem("matchingPlayers",r.matchingPlayers)\
-                    +Element.createElem("mmpick",r.mmpick)\
+                    +Element.createElem("mmpick",str(r.mmpick).lower())\
                     +Element.createElem("isAdventurePlanet",r.isAdventurePlanet)\
                     +Element.createElem("playCount",r.playCount)\
                     +Element.createElem("completionCount",r.completionCount)\

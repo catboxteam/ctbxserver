@@ -1,4 +1,5 @@
-root = "/LITTLEBIGPLANETPS3_XML"
+from Controllers.Misc.misc import Misc
+
 from Controllers.Database.User import Users
 from Controllers.Elements import xml
 from flask import request,Response
@@ -7,7 +8,7 @@ from __main__ import app
 import json
 import io
 
-@app.route(f'{root}/updateUser',methods=['POST'])
+@app.route(f'{Misc.root}/updateUser',methods=['POST'])
 def Update():
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get()
@@ -31,6 +32,8 @@ def Update():
                 User.yayHash = c.text
             case "boo2":
                 User.booHash = c.text
+            case "meh2":
+                User.mehHash = c.text       
             case _:
                 print(f"Tag not found ",c.tag,c.text)
                 return Response(status=404)
@@ -39,7 +42,7 @@ def Update():
     return Response(status=200)
 
 
-@app.route(f'{root}/update_my_pins',methods=['POST'])
+@app.route(f'{Misc.root}/update_my_pins',methods=['POST'])
 def Pins():
     cookie = request.cookies.get("MM_AUTH")
     user = Users.select().where(Users.authCookie == cookie).get()
@@ -50,12 +53,12 @@ def Pins():
     user.save()
     return Response(response="[{\"StatusCode\":200}]")
 
-@app.route(f'{root}/filterResources',methods=['POST'])
+@app.route(f'{Misc.root}/filterResources',methods=['POST'])
 def filter():
     data = request.data.decode()
     print(data)
     return Response(data,status=200)
 
-@app.route(f'{root}/showNotUploaded',methods=["POST"])
+@app.route(f'{Misc.root}/showNotUploaded',methods=["POST"])
 def notUploaded():
     return Response(request.data.decode(),status=200, mimetype='text/xml')

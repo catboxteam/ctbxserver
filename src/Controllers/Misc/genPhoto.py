@@ -1,5 +1,7 @@
 from Controllers.Elements.xml import Element
 from Controllers.Database.Photo import UserPhoto
+from Controllers.Misc.misc import Misc
+
 # from Controllers.Database.Slot import Slots,HeartedSlots
 from datetime import timedelta, date
 from peewee import fn
@@ -17,7 +19,7 @@ class Photo:
             # d = cf+Element.createElem("name",i.name)\
             #     +Element.createElem("description","test")
             photos += Element.createElem("id",i.id)
-            photos += Element.createElem("author",i.username)
+            photos += Element.createElem("author", Misc.idToPlayer(i.playerId))
             photos += Element.createElem("small",i.smallHash)
             photos += Element.createElem("medium",i.mediumHash)
             photos += Element.createElem("large",i.largeHash)

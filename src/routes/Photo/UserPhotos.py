@@ -1,4 +1,5 @@
-root = "/LITTLEBIGPLANETPS3_XML"
+from Controllers.Misc.misc import Misc
+
 from Controllers.Elements.xml import Element
 from Controllers.Misc.genPhoto import Photo
 from Controllers.Database.Photo import *
@@ -8,7 +9,7 @@ import xml.etree.ElementTree as ET
 from __main__ import app
 import io
 
-@app.route(f'{root}/uploadPhoto',methods=['POST'])
+@app.route(f'{Misc.root}/uploadPhoto',methods=['POST'])
 def upload():
     data = request.stream.read().decode()
     cookie = request.cookies.get("MM_AUTH")
@@ -18,7 +19,7 @@ def upload():
     root = tree.getroot()
 
     createPhoto = UserPhoto()
-    createPhoto.username = usr
+    createPhoto.playerId = Misc.playerToId(usr)
     # author = root.find("author").text
     smallHash = root.find("small").text
     mediumHash = root.find("medium").text
@@ -75,7 +76,7 @@ def upload():
     return Response(response=r, status=200, mimetype="application/xml")
 
 
-@app.route(f'{root}/photos/<type>',methods=['GET'])
+@app.route(f'{Misc.root}/photos/<type>',methods=['GET'])
 def getPhotos(type):
     by = request.args.get('user')
     pageStart = int(request.args.get("pageStart")) -1
@@ -87,14 +88,14 @@ def getPhotos(type):
         case "by":
             cc = (UserPhoto
             .select()
-            .where(UserPhoto.username==by)
+            .where(UserPhoto.playerId==Misc.playerToId(by))
             .order_by(UserPhoto.timestamp.desc())
             .limit(pageSize)
             .offset(pageStart))
         case "with":
             cc = (UserPhoto
             .select()
-            .where(UserPhoto.username!=by)
+            .where(UserPhoto.username!=Misc.playerToId(by))
             .where(UserPhoto.subjects.contains(by))
             .order_by(UserPhoto.timestamp.desc())
             .limit(pageSize)
@@ -110,7 +111,7 @@ def getPhotos(type):
 
 
 
-@app.route(f'{root}/photos/user/<idx>',methods=['GET'])
+@app.route(f'{Misc.root}/photos/user/<idx>',methods=['GET'])
 def getPhotoSlot(idx):
     pageStart = int(request.args.get("pageStart")) -1
     pageSize = int(request.args.get("pageSize"))
@@ -130,7 +131,7 @@ def getPhotoSlot(idx):
     return Response(response=final2, status=200, mimetype="application/xml")
 
                 
-@app.route(f'{root}/deletePhoto/<ids>',methods=['POST'])
+@app.route(f'{Misc.root}/deletePhoto/<ids>',methods=['POST'])
 def deletePhoto(ids):
     print("test")
     cookie = request.cookies.get("MM_AUTH")

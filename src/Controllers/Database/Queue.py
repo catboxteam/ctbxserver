@@ -10,4 +10,5 @@ class BaseModel(Model):
 class Queue(BaseModel):
     id = PrimaryKeyField(unique=True)
     slotId = IntegerField(null=True,default=0)
-    player = TextField(unique=False)
+    # player = TextField(unique=False)
+    playerId = IntegerField(default=0)

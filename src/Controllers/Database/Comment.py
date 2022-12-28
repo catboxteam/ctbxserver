@@ -11,7 +11,8 @@ class BaseModel(Model):
 
 class Comments(BaseModel):
     id = PrimaryKeyField(unique=True)
-    username = TextField(unique=False)
+    playerId = IntegerField(default=0)
+    # username = TextField(unique=False)
     message = TextField(unique=False)
     timestamp = IntegerField(default=0)
     toUser = TextField(unique=False)

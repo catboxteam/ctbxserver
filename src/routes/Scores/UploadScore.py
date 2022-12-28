@@ -1,4 +1,5 @@
-root = "/LITTLEBIGPLANETPS3_XML"
+from Controllers.Misc.misc import Misc
+
 
 from Controllers.Database.Score import *
 from Controllers.Elements.xml import Element
@@ -30,7 +31,7 @@ def test(id):
 
 
 
-@app.route(f"{root}/topscores/user/<slotId>/<players>",methods=["GET"])
+@app.route(f"{Misc.root}/topscores/user/<slotId>/<players>",methods=["GET"])
 def getScore(slotId,players):
 
     # t = test(slotId)
@@ -50,7 +51,7 @@ def getScore(slotId,players):
     return Response(dd,status=200, mimetype='text/xml')
 
 
-@app.route(f"{root}/scoreboard/user/<slotId>",methods=["POST"])
+@app.route(f"{Misc.root}/scoreboard/user/<slotId>",methods=["POST"])
 def uploadScore(slotId):
     data = request.stream.read().decode()
     cookie = request.cookies.get("MM_AUTH")

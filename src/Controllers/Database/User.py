@@ -10,7 +10,10 @@ class BaseModel(Model):
 
 class heartedUser(Model):
     id = PrimaryKeyField(unique=True)
-    username = TextField()
+    playerId = IntegerField(default=0)
+
+    # username = TextField()
+    # yayHash = TextField(null=True)
     whoHearted = TextField()
     class Meta:
         database = db
@@ -23,17 +26,11 @@ class Users(BaseModel):
     biography = TextField(null=True)
     heartCount = IntegerField(null=True,default=0)
     planetHash = TextField(null=True)
-    freeSlotsLBP1 = IntegerField(null=True,default=50)
-    freeSlotsLBP2 = IntegerField(null=True,default=50)
-    freeSlotsLBP3 = IntegerField(null=True,default=50)
     pins = TextField(null=True)
     locationX = IntegerField(null=True,default=0)
     locationY = IntegerField(null=True,default=0)
     commentsEnabled = BooleanField(default=True)
-    heartedAuthors = IntegerField(default=0)
-    heartedSlots = IntegerField(default=0)
     booHash = TextField(null=True)
     yayHash = TextField(null=True)
-    photoCount = IntegerField(null=True,default=0)
-    reviewCount = IntegerField(null=True,default=0)
+    mehHash = TextField(null=True)
     authCookie = TextField(null=True)

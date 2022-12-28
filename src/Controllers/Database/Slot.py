@@ -12,7 +12,9 @@ class BaseModel(Model):
 
 class Slots(BaseModel):
     id = PrimaryKeyField(unique=True)
-    username = TextField()
+    # username = TextField()
+    playerId = IntegerField(default=0)
+
     name = TextField(null=True)
     icon = TextField(null=True)
     description = TextField(null=True)
@@ -77,7 +79,9 @@ class Slots(BaseModel):
 
 class HeartedSlots(Model):
     id = PrimaryKeyField(unique=True)
-    username = TextField()
+    # username = TextField()
+    playerId = IntegerField(default=0)
+
     slotId = IntegerField(null=True,default=0)
     class Meta:
         database = db

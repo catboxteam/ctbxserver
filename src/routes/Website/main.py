@@ -1,4 +1,5 @@
-root = "/LITTLEBIGPLANETPS3_XML"
+from Controllers.Misc.misc import Misc
+
 from flask import request,render_template,url_for
 from playhouse.flask_utils import object_list,PaginatedQuery
 from __main__ import app

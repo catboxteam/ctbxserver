@@ -10,7 +10,8 @@ class BaseModel(Model):
 
 class UserPhoto(BaseModel):
     id = PrimaryKeyField(unique=True)
-    username = TextField(unique=False)
+    playerId = IntegerField(default=0)
+    # username = TextField(unique=False)
     timestamp = IntegerField(default=0)
     subjects = TextField(null=True,unique=False)
     smallHash = TextField(unique=False)

@@ -5,22 +5,23 @@ from Controllers.Database.Photo import UserPhoto
 from Controllers.Database.Review import Reviews
 from Controllers.Database.Queue import Queue
 from Controllers.Elements.xml import Element
-
+from Controllers.Misc.misc import Misc
 
 
 class GeneratedUser:
     def genUsr(name):
+        plr = Misc.playerToId(name)
         user = Users.get(username=name)
         
 
         slots = len(Slots
         .select()
         .where(Slots.publishedIn=="lbp2")
-        .where(Slots.username==name))
+        .where(Slots.playerId==plr))
 
         allslots = len(Slots
         .select()
-        .where(Slots.username==name))
+        .where(Slots.playerId==plr))
 
         comments = len(Comments
         .select(Comments)
@@ -28,32 +29,32 @@ class GeneratedUser:
 
         favSlots = len(HeartedSlots
             .select(HeartedSlots)
-            .where(HeartedSlots.username==name))
+            .where(HeartedSlots.playerId==plr))
 
         userCount = len(heartedUser
             .select(heartedUser.whoHearted)
             .where(heartedUser.whoHearted==name))
 
         heartCount = len(heartedUser
-            .select(heartedUser.username)
-            .where(heartedUser.username==name))
+            .select(heartedUser.playerId)
+            .where(heartedUser.playerId==plr))
 
         photosCount = len(UserPhoto
-            .select(UserPhoto.username)
-            .where(UserPhoto.username==name))
+            .select(UserPhoto.playerId)
+            .where(UserPhoto.playerId==plr))
 
         photoWithMeCount = len(UserPhoto
-            .select(UserPhoto.username)
-            .where(UserPhoto.username!=name)
+            .select(UserPhoto.playerId)
+            .where(UserPhoto.playerId!=plr)
             .where(UserPhoto.subjects.contains(name)))
             
         queueCount = len(Queue
-            .select(Queue.player)
-            .where(Queue.player==name))
+            .select(Queue.playerId)
+            .where(Queue.playerId==plr))
 
         reviewCount = len(Reviews
             .select(Reviews.id)
-            .where(Reviews.username==name))
+            .where(Reviews.playerId==plr))
         
         location = Element.createElem("x",user.locationX) + Element.createElem("y",user.locationY)
         finalResult = Element.createElem("location",location)
@@ -93,7 +94,7 @@ class GeneratedUser:
         final += Element.createElem("photosByMeCount",photosCount)
         final += Element.createElem("photosWithMeCount",photoWithMeCount)
 
-        final += Element.createElem("commentsEnabled",user.commentsEnabled)
+        final += Element.createElem("commentsEnabled",str(user.commentsEnabled).lower())
         final += finalResult
         final += Element.createElem("favouriteSlotCount",favSlots)
         final += Element.createElem("favouriteUserCount",userCount)

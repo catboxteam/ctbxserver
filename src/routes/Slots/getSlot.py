@@ -1,4 +1,4 @@
-root = "/LITTLEBIGPLANETPS3_XML"
+
 from Controllers.Database.Comment import Comments
 from Controllers.Database.Slot import Slots,HeartedSlots
 from Controllers.Database.Review import Reviews
@@ -14,16 +14,18 @@ from Controllers.Misc.misc import *
 import xml.etree.ElementTree as ET
 from __main__ import app
 import io
+import functools
 
 
-@app.route(f"{root}/startPublish",methods=["POST"])
+
+@app.route(f"{Misc.root}/startPublish",methods=["POST"])
 def startPublish():
     startPub = Misc.timestamp()
 
     # data = request.stream.read().decode()
     data = request.data.decode()
     cookie = request.cookies.get("MM_AUTH")
-    user = Users.select().where(Users.authCookie == cookie).get().username
+    user = Users.select().where(Users.authCookie == cookie).get()
     f = io.StringIO(data)
     tree = ET.parse(f)
     root = tree.getroot()
@@ -33,7 +35,7 @@ def startPublish():
 
     # dd,c = Slots.get_or_create(id=root.find("id").text,username=user)    
     if root.find("id") == None:
-        dd = Slots(username=Users.select().where(Users.authCookie == cookie).get().username)
+        dd = Slots(playerId=user.id)
         dd.firstPublished = startPub
     else:
         dd = Slots.select().where(Slots.id==root.find("id").text).get()
@@ -106,7 +108,7 @@ def startPublish():
     dd.lastUpdated = startPub
 
 
-    if user != dd.username:
+    if user.id != dd.playerId:
         print("waste of time")
         return Response(status=403)
     else:
@@ -126,7 +128,7 @@ def startPublish():
 
 
 
-@app.route(f"{root}/publish",methods=["POST"])
+@app.route(f"{Misc.root}/publish",methods=["POST"])
 def finalPublish():
     data = request.stream.read().decode()
     f = io.StringIO(data)
@@ -138,19 +140,19 @@ def finalPublish():
     # slotFinal = LBP.genSlot("id",root.find("id").text,"1","1")
     return Response(ff,status=200, mimetype='text/xml')
 
-@app.route(f"{root}/s/user/<typex>",methods=["GET"])
+@app.route(f"{Misc.root}/s/user/<typex>",methods=["GET"])
 def getSlotsid(typex):
     r =  Slotsx.genSlot("id",typex,10,10)
     return Response(r,status=200, mimetype='text/xml')
 
-# @app.route(f"{root}/slots/",methods=["GET"])
+# @app.route(f"{Misc.root}/slots/",methods=["GET"])
 
-@app.route(f"{root}/slots/lolcatftw/<user>",methods=["GET"])
+@app.route(f"{Misc.root}/slots/lolcatftw/<user>",methods=["GET"])
 def getlolcat(user):
     pageStart = int(request.args.get("pageStart"))-1
     pageSize = request.args.get("pageSize")
 
-    getFav = (Queue.select().where(Queue.player==user))
+    getFav = (Queue.select().where(Queue.playerId==Misc.playerToId(user)))
     f =''
     for i in getFav.objects():
         f += Slotsx.genSlot("id",i.slotId,pageSize,pageStart)
@@ -159,12 +161,12 @@ def getlolcat(user):
     return Response(response=dd, status=200, mimetype="application/xml")
 
 
-@app.route(f"{root}/lolcatftw/remove/user/<id>",methods=["POST"])
+@app.route(f"{Misc.root}/lolcatftw/remove/user/<id>",methods=["POST"])
 def removelolcat(id):
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get()
 
-    d = Queue.delete().where(Queue.player==User.username).where(Queue.slotId==id)
+    d = Queue.delete().where(Queue.playerId==User.id).where(Queue.slotId==id)
 
     d.execute()
     return Response(status=200)
@@ -172,7 +174,7 @@ def removelolcat(id):
 
 
 
-@app.route(f"{root}/slots",methods=["GET"])
+@app.route(f"{Misc.root}/slots",methods=["GET"])
 def get():
     pageStart = int(request.args.get("pageStart"))-1
     pageSize = request.args.get("pageSize")
@@ -186,8 +188,8 @@ def get():
 
     return Response(response=dd, status=200, mimetype="application/xml")
 
-
-@app.route(f"{root}/slots/<type>",methods=["GET"])
+@functools.lru_cache
+@app.route(f"{Misc.root}/slots/<type>",methods=["GET"])
 def getSlots(type):
     cookie = request.cookies.get("MM_AUTH")
     filter = request.args.get("gameFilterType")
@@ -212,7 +214,6 @@ def getSlots(type):
         case "mostHearted":
 
             dateFilterType = request.args.get("dateFilterType")
-            print(dateFilterType)
             if dateFilterType:
                 if dateFilterType == "thisMonth":
                     date1 = date.today() + timedelta(days=-31)
@@ -233,7 +234,7 @@ def getSlots(type):
     return Response(finalSlot,status=200, mimetype='text/xml')
 
 
-@app.route(f"{root}/unpublish/<id>",methods=["POST"])
+@app.route(f"{Misc.root}/unpublish/<id>",methods=["POST"])
 def delSlot(id):
     ee = Slots.get_by_id(id)
 

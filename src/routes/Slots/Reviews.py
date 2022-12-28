@@ -1,4 +1,4 @@
-root = "/LITTLEBIGPLANETPS3_XML"
+
 from Controllers.Database.Slot import Slots
 from Controllers.Database.User import Users
 from Controllers.Elements.xml import Element
@@ -29,7 +29,7 @@ def gen(id):
     final = ''
     for i in q:
         f += Element.taggedElem("slot_id","type","user",i.slotId)
-        f += Element.createElem("reviewer",i.username)
+        f += Element.createElem("reviewer",Misc.idToPlayer(i.playerId))
         f += Element.createElem("thumb",i.thumb)
         f += Element.createElem("timestamp",i.thumb)
         f += Element.createElem("deleted",i.deleted)
@@ -39,23 +39,23 @@ def gen(id):
         f += Element.createElem("thumbsup",i.thumbsup)
         f += Element.createElem("thumbsdown",i.thumbsdown)
 
-        final += Element.taggedElem("review","id",f"{i.slotId}.{i.username}",f)
+        final += Element.taggedElem("review","id",f"{i.slotId}.{Misc.idToPlayer(i.playerId)}",f)
 
     return final
 
 
 
-@app.route(f"{root}/postReview/user/<slotId>",methods=["POST"])
+@app.route(f"{Misc.root}/postReview/user/<slotId>",methods=["POST"])
 def createReview(slotId):
     cookie = request.cookies.get("MM_AUTH")
-    user = Users.select().where(Users.authCookie == cookie).get().username
+    user = Users.select().where(Users.authCookie == cookie).get().id
     data = request.stream.read().decode()
     f = io.StringIO(data)
     tree = ET.parse(f)
     root = tree.getroot()
     
 
-    review, created = Reviews.get_or_create(username=user, slotId=slotId)
+    review, created = Reviews.get_or_create(playerId=user, slotId=slotId)
     review.timestamp = Misc.timestamp()
 
     for c in root:
@@ -71,10 +71,10 @@ def createReview(slotId):
     return Response(status=200)
 
 
-@app.route(f"{root}/reviewsFor/user/<slotid>",methods=["GET"])
+@app.route(f"{Misc.root}/reviewsFor/user/<slotid>",methods=["GET"])
 def rev(slotid):
     cookie = request.cookies.get("MM_AUTH")
-    User = Users.select().where(Users.authCookie == cookie).get().username
+    User = Users.select().where(Users.authCookie == cookie).get().id
     c = (Reviews
         .select()
         .where(Reviews.slotId==slotid))
@@ -82,13 +82,13 @@ def rev(slotid):
 
 
     
-    if c.where(Reviews.username==User).exists():
+    if c.where(Reviews.playerId==User).exists():
         f = ''
     else:
         f = f"""
-        <review id="{slotid}.{User}">
+        <review id="{slotid}.{Misc.idToPlayer(User)}">
             <slot_id type="user">{slotid}</slot_id>
-            <reviewer>{User}</reviewer>
+            <reviewer>{Misc.idToPlayer(User)}</reviewer>
             <thumb>1</thumb>
             <timestamp>1343916636355</timestamp>
             <deleted>false</deleted>
@@ -108,11 +108,11 @@ def rev(slotid):
     return Response(rev,status=200, mimetype='text/xml') 
 
 
-@app.route(f"{root}/reviewsBy/<username>",methods=["GET"])
+@app.route(f"{Misc.root}/reviewsBy/<username>",methods=["GET"])
 def revBy(username):
     c = (Reviews
         .select()
-        .where(Reviews.username==username))
+        .where(Reviews.playerId==Misc.playerToId(username)))
     f =''
     for i in c:
         f += gen(i.id)

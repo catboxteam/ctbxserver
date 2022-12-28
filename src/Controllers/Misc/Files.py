@@ -10,6 +10,7 @@ class fileType(Enum):
     Jpeg = 4
     Png = 5
     Voip = 6
+    GTFTex = 7
     Unknown = -1
 
 class LBPFile:
@@ -33,6 +34,8 @@ class LBPFile:
                     return fileType.Level
                 case "VOPb":
                     return fileType.Voip
+                case "GTF ":
+                    return fileType.GTFTex
                 case _:
                     return f
             
@@ -53,6 +56,10 @@ class LBPFile:
                 return True
             case fileType.Voip:
                 return True
+            case fileType.Level:
+                return True
+            case fileType.GTFTex:
+                return False
             case _:
                 d = io.BytesIO(self.file)
                 # print(d)
