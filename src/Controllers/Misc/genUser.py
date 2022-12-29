@@ -87,7 +87,7 @@ class GeneratedUser:
         final += Element.createElem("yay2",user.yayHash)
         final += Element.createElem("boo2",user.booHash)
         final += Element.createElem("meh2",user.booHash)
-        final += Element.createElem("biography",user.biography)
+        final += Element.createElem("biography",str(user.biography))
         final += Element.createElem("reviewCount",reviewCount)
         final += Element.createElem("commentCount",comments)
 

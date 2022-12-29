@@ -1,9 +1,11 @@
-from Controllers.Misc.misc import Misc
-
-from flask import request,render_template,url_for,send_file
+from flask import request,render_template,send_file,Response
+from flask import json as fjson
+from collections import OrderedDict
+import json
 from __main__ import app
 from Controllers.Database.User import Users
 from Controllers.Database.Slot import Slots
+from Controllers.Misc.Info import ServerInfo
 import io
 
 @app.route("/")
@@ -19,7 +21,7 @@ def usr(page):
     pageint = usr.paginate(page,5)
     count = len(pageint)
     
-    return render_template('users.html',data=pageint,page=page,usrcount=count)
+    return render_template('users.html',data=pageint,page=page,usrcount=count,link=ServerInfo.exUrl)
 
 @app.route("/levels")
 def level():
@@ -37,3 +39,10 @@ def imageGet(sha1):
         return send_file(io.BytesIO(open(f"png/{sha1}.png","rb").read()),mimetype='image/png')
     except FileNotFoundError:
         return send_file(io.BytesIO(open(f"png/62c51cd8a06c1a98fe4d6ef4739951dd6eeda359.png","rb").read()),mimetype='image/png')
+
+
+# @app.route("/autodiscover")
+# def autodiscover():
+#     jsonResponse = {"version":1,"serverBrand":ServerInfo.serverBrand,"url":ServerInfo.exUrl}
+
+#     return Response(status=200,response=json.dumps(jsonResponse, sort_keys=False) ,mimetype='application/json')

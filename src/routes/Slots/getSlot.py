@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 from __main__ import app
 import io
 import functools
+import html
 
 
 
@@ -45,16 +46,16 @@ def startPublish():
         match child.tag:
             case "name":
                 name = child.text
-                dd.name = child.text
+                dd.name = html.escape(child.text)
             case "description":
                 description = child.text
-                dd.description = child.text
+                dd.description = html.escape(child.text)
             case "icon":
                 icon = child.text
-                dd.icon = child.text
+                dd.icon = html.escape(child.text)
             case "rootLevel":
                 rootL = child.text
-                dd.rootLevel = child.text
+                dd.rootLevel = html.escape(child.text)
             case "location":
                 dd.locationX = child.find("x").text
                 dd.locationY = child.find("y").text
@@ -131,15 +132,13 @@ def startPublish():
 
 @app.route(f"{Misc.root}/publish",methods=["POST"])
 def finalPublish():
+    cookie = request.cookies.get("MM_AUTH")
+    user = Users.select().where(Users.authCookie == cookie).get()
     data = request.stream.read().decode()
     f = io.StringIO(data)
-    tree = ET.parse(f)
-    root = tree.getroot()
-    ff = data.replace('<slot type="user">','<slot>')
 
-    
-    # slotFinal = LBP.genSlot("id",root.find("id").text,"1","1")
-    return Response(ff,status=200, mimetype='text/xml')
+    lastSlot = Slots.select().where(Slots.playerId==user.id).order_by(Slots.firstPublished.desc()).get()
+    return Response(Slotsx.genSlot("id",lastSlot.id,10,1),status=200, mimetype='text/xml')
 
 @app.route(f"{Misc.root}/s/user/<typex>",methods=["GET"])
 def getSlotsid(typex):

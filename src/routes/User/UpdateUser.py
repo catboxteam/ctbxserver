@@ -23,7 +23,7 @@ def Update():
                 User.locationX = c.find("x").text
                 User.locationY = c.find("y").text
             case "biography":
-                User.biography = c.text
+                User.biography = str(c.text)
             case "icon":
                 User.iconHash = c.text
             case "planets":

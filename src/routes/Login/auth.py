@@ -6,7 +6,7 @@ from Controllers.Elements.xml import Element
 from Controllers.Database.Slot import Slots
 import xml.etree.ElementTree as ET
 import io
-
+import time
 
 @app.route(f'{Misc.root}/login',methods=['POST'])
 def login():
@@ -20,11 +20,11 @@ def eula():
 
 @app.route(f'{Misc.root}/announce',methods=['GET'])
 def announce():
-    return Response("ctbx.server\nTEST VERSION!!!",status=200, mimetype='text/plain')
+    return Response("hi",status=200, mimetype='text/plain')
 
 @app.route(f'{Misc.root}/match',methods=['POST'])
 def match():
-    print(request.stream.read().decode())
+    print(request.data.decode())
     return Response("[{\"StatusCode\":200}]",status=200, mimetype='text/plain')
 
 

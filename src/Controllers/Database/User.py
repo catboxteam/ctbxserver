@@ -23,7 +23,7 @@ class Users(BaseModel):
     id = PrimaryKeyField(unique=True)
     username = TextField(unique=True)
     iconHash = TextField(null=True)
-    biography = TextField(null=True)
+    biography = CharField(null=True)
     heartCount = IntegerField(null=True,default=0)
     planetHash = TextField(null=True)
     pins = TextField(null=True)
