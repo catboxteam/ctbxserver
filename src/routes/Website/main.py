@@ -1,7 +1,6 @@
 from Controllers.Misc.misc import Misc
 
 from flask import request,render_template,url_for,send_file
-from playhouse.flask_utils import object_list,PaginatedQuery
 from __main__ import app
 from Controllers.Database.User import Users
 from Controllers.Database.Slot import Slots
@@ -18,7 +17,8 @@ def index():
 def usr(page):
     usr = Users.select()
     pageint = usr.paginate(page,5)
-    count = pageint.count()
+    count = len(pageint)
+    
     
     return render_template('users.html',data=pageint,page=page,usrcount=count)
     # return object_list('users.html',query=pageint,paginate_by=5)

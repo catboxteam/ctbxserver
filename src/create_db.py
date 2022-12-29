@@ -11,3 +11,6 @@ from Controllers.Database.Review import *
 db.create_tables([Users,Comments,UserPhoto,heartedUser,HeartedSlots,Slots,Scores,Queue,Reviews])
 # Users.create(username="Seconder45")
 # Users.create(username="TestProfile",biography="For testing")
+# for i in range(1,6):
+#     Users.create(username=f"WebTest{i}",biography="Website test")
+
