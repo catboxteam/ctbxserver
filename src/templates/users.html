@@ -6,6 +6,12 @@ Users
 
 {% block body %}
 <div class="d-flex flex-column">
+    {% if usrcount <= 0 %}
+      <div class="text-center">
+        <p>no users :(</p>
+      </div>
+    {% endif %}
+
     {% for i in data %}   
     <div class="card border-light bg-dark" style="width: 100%;">
         <div class="card-body d-flex">

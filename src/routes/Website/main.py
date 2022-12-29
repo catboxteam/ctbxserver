@@ -19,9 +19,7 @@ def usr(page):
     pageint = usr.paginate(page,5)
     count = len(pageint)
     
-    
     return render_template('users.html',data=pageint,page=page,usrcount=count)
-    # return object_list('users.html',query=pageint,paginate_by=5)
 
 @app.route("/levels")
 def level():
