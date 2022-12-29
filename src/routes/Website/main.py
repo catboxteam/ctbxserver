@@ -1,10 +1,11 @@
 from Controllers.Misc.misc import Misc
 
-from flask import request,render_template,url_for
+from flask import request,render_template,url_for,send_file
 from playhouse.flask_utils import object_list,PaginatedQuery
 from __main__ import app
 from Controllers.Database.User import Users
 from Controllers.Database.Slot import Slots
+import io
 
 @app.route("/")
 def index():
@@ -18,6 +19,7 @@ def usr(page):
     usr = Users.select()
     pageint = usr.paginate(page,5)
     count = pageint.count()
+    
     return render_template('users.html',data=pageint,page=page,usrcount=count)
     # return object_list('users.html',query=pageint,paginate_by=5)
 
@@ -29,3 +31,11 @@ def level():
 @app.route("/photos")
 def photo():
     return render_template('photos.html')
+
+
+@app.route("/image/<sha1>")
+def imageGet(sha1):
+    try:
+        return send_file(io.BytesIO(open(f"png/{sha1}.png","rb").read()),mimetype='image/png')
+    except FileNotFoundError:
+        return send_file(io.BytesIO(open(f"png/62c51cd8a06c1a98fe4d6ef4739951dd6eeda359.png","rb").read()),mimetype='image/png')

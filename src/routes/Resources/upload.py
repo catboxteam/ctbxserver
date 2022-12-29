@@ -14,7 +14,11 @@ def Upload(sha1):
         print(f"{sha1} (Type: {file.fileType} isSafe: {isSafe})")
 
         if isSafe:
+            # if file.fileType == fileType.Jpeg:
+            #     open(f"png/{sha1}.jpeg","wb").write(fileUpload)
+            # else:
             open(f"r/{sha1}","wb").write(fileUpload)
+                
         else:
             return Response(status=404)
 

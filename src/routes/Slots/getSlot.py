@@ -105,6 +105,7 @@ def startPublish():
             case _:
                 print(f"Not found {child.tag} {child.text}")
 
+    resources.append(icon)
     dd.lastUpdated = startPub
 
 

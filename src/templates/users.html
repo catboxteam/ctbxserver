@@ -8,17 +8,21 @@ Users
 <div class="d-flex flex-column">
     {% for i in data %}   
     <div class="card border-light bg-dark" style="width: 100%;">
-        <div class="card-body">
-            <h5 class="card-title">{{ i.username }}</h5>
-            <p class="card-text">{{ i.biography }}</p>
-            <small class="text-muted">
-                <i class="fa-solid fa-heart"></i>
-                {{i.heartCount}}
-              </small>
-            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+        <div class="card-body d-flex">
+            <img src="http://127.0.0.1:10060/image/{{i.iconHash}}" style='width: 100px; height: 100px;'>
+            <div class="card-content">
+                <h5 class="card-title">{{ i.username }}</h5>
+                <p class="card-text">{{ i.biography }}</p>
+                <small class="text-muted">
+                    <i class="fa-solid fa-heart"></i>
+                    {{i.heartCount}}
+                </small>
+                <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+            </div>
         </div>
     </div>
     {% endfor %}
+</div>
 
     
 
