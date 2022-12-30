@@ -6,8 +6,6 @@ from Controllers.Elements.xml import Element
 from Controllers.Database.Slot import Slots
 import xml.etree.ElementTree as ET
 import io
-import time
-
 @app.route(f'{Misc.root}/login',methods=['POST'])
 def login():
     ticket = parseTicket.parseTicket(request.data)
@@ -57,6 +55,7 @@ def playersInPodCount():
 # </planetStats>
 
 @app.route(f'{Misc.root}/planetStats',methods=['GET'])
+@Misc.lbpRequest
 def planetStats():
     totalSlots = len(Slots.select(Slots.id))
     teamPicks = len(Slots.select(Slots.id).where(Slots.mmpick==True))

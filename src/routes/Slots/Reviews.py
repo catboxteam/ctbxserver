@@ -46,10 +46,11 @@ def gen(id):
 
 
 @app.route(f"{Misc.root}/postReview/user/<slotId>",methods=["POST"])
+@Misc.lbpRequest
 def createReview(slotId):
     cookie = request.cookies.get("MM_AUTH")
     user = Users.select().where(Users.authCookie == cookie).get().id
-    data = request.stream.read().decode()
+    data = request.data.decode()
     f = io.StringIO(data)
     tree = ET.parse(f)
     root = tree.getroot()
@@ -72,6 +73,7 @@ def createReview(slotId):
 
 
 @app.route(f"{Misc.root}/reviewsFor/user/<slotid>",methods=["GET"])
+@Misc.lbpRequest
 def rev(slotid):
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get().id
@@ -109,6 +111,7 @@ def rev(slotid):
 
 
 @app.route(f"{Misc.root}/reviewsBy/<username>",methods=["GET"])
+@Misc.lbpRequest
 def revBy(username):
     c = (Reviews
         .select()

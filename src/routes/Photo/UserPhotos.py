@@ -10,8 +10,9 @@ from __main__ import app
 import io
 
 @app.route(f'{Misc.root}/uploadPhoto',methods=['POST'])
+@Misc.lbpRequest
 def upload():
-    data = request.stream.read().decode()
+    data = request.data.decode()
     cookie = request.cookies.get("MM_AUTH")
     usr = Users.select().where(Users.authCookie == cookie).get().username
     f = io.StringIO(data)
@@ -77,6 +78,7 @@ def upload():
 
 
 @app.route(f'{Misc.root}/photos/<type>',methods=['GET'])
+@Misc.lbpRequest
 def getPhotos(type):
     by = request.args.get('user')
     pageStart = int(request.args.get("pageStart")) -1

@@ -13,6 +13,7 @@ import io
 
 #wtf
 @app.route(f"{Misc.root}/lolcatftw/add/user/<slotId>",methods=["POST"])
+@Misc.lbpRequest
 def addlolcat(slotId):
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get()
@@ -25,6 +26,7 @@ def addlolcat(slotId):
 
 
 @app.route(f"{Misc.root}/favouriteSlots/<user>",methods=["GET"])
+@Misc.lbpRequest
 def getFav(user):
     pageStart = int(request.args.get("pageStart"))-1
     pageSize = request.args.get("pageSize")
@@ -40,6 +42,7 @@ def getFav(user):
     return Response(response=dd, status=200, mimetype="application/xml")
 
 @app.route(f"{Misc.root}/favourite/slot/user/<ids>",methods=["POST"])
+@Misc.lbpRequest
 def setFav(ids):
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get()
@@ -56,6 +59,7 @@ def setFav(ids):
     return Response(status=200)
 
 @app.route(f"{Misc.root}/unfavourite/slot/user/<ids>",methods=["POST"])
+@Misc.lbpRequest
 def unFav(ids):
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get()

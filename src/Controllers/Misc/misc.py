@@ -1,8 +1,11 @@
-from Controllers.Database.User import Users,heartedUser
-from functools import wraps
+from Controllers.Misc.Info import ServerInfo
+from Controllers.Database.User import Users
+from flask import request,Response
 from datetime import datetime
-import time
+from functools import wraps
+import hashlib
 import os.path
+import time
 
 
 class Misc:
@@ -26,3 +29,23 @@ class Misc:
         return f[0].id
 
 
+    def lbpRequest(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            cookie = request.cookies.get("MM_AUTH")
+            sha1Digest = request.headers.get('x-digest-a')
+            if cookie and sha1Digest and ServerInfo.digestKey:
+                m = hashlib.sha1()
+                m.update(request.data)
+                m.update(request.cookies.get("MM_AUTH").encode('utf-8'))
+                m.update(request.path.encode('utf-8'))
+                m.update(str(ServerInfo.digestKey).encode('utf-8'))
+                if sha1Digest == m.hexdigest():
+                    return f(*args, **kwargs)
+                else:
+                    # print(f'From headers: {sha1Digest} | computed: {m.hexdigest()}')
+                    return Response(status=403,response="Invalid digest!")
+            else:
+                return Response(status=403,response="Not LittleBigPlanet request!")
+
+        return decorated_function

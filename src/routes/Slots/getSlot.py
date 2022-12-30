@@ -1,25 +1,26 @@
 
-from Controllers.Database.Comment import Comments
 from Controllers.Database.Slot import Slots,HeartedSlots
+from Controllers.Database.Comment import Comments
 from Controllers.Database.Review import Reviews
-from Controllers.Database.User import Users
-from Controllers.Database.Queue import Queue
 from Controllers.Database.Score import Scores
 from Controllers.Elements.xml import Element
+from Controllers.Database.Queue import Queue
 from Controllers.Misc.genSlot import Slotsx
+from Controllers.Database.User import Users
 from Controllers.Misc.misc import Misc
 from datetime import timedelta, date
 from flask import request,Response
 from Controllers.Misc.misc import *
 import xml.etree.ElementTree as ET
 from __main__ import app
-import io
 import functools
 import html
+import io
 
 
 
 @app.route(f"{Misc.root}/startPublish",methods=["POST"])
+@Misc.lbpRequest
 def startPublish():
     startPub = Misc.timestamp()
 
@@ -131,6 +132,7 @@ def startPublish():
 
 
 @app.route(f"{Misc.root}/publish",methods=["POST"])
+@Misc.lbpRequest
 def finalPublish():
     cookie = request.cookies.get("MM_AUTH")
     user = Users.select().where(Users.authCookie == cookie).get()
@@ -141,6 +143,7 @@ def finalPublish():
     return Response(Slotsx.genSlot("id",lastSlot.id,10,1),status=200, mimetype='text/xml')
 
 @app.route(f"{Misc.root}/s/user/<typex>",methods=["GET"])
+@Misc.lbpRequest
 def getSlotsid(typex):
     r =  Slotsx.genSlot("id",typex,10,10)
     return Response(r,status=200, mimetype='text/xml')
@@ -148,6 +151,7 @@ def getSlotsid(typex):
 # @app.route(f"{Misc.root}/slots/",methods=["GET"])
 
 @app.route(f"{Misc.root}/slots/lolcatftw/<user>",methods=["GET"])
+@Misc.lbpRequest
 def getlolcat(user):
     pageStart = int(request.args.get("pageStart"))-1
     pageSize = request.args.get("pageSize")
@@ -162,6 +166,7 @@ def getlolcat(user):
 
 
 @app.route(f"{Misc.root}/lolcatftw/remove/user/<id>",methods=["POST"])
+@Misc.lbpRequest
 def removelolcat(id):
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get()

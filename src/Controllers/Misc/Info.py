@@ -1,5 +1,6 @@
-
+import json
+config = json.load(open("config.json","r"))
 class ServerInfo:
-    serverBrand = "ctbx"
-    exUrl = 'http://127.0.0.1:10060/'
-    digestKey = None # yes
+    serverBrand = config["brand"]
+    exUrl = config["url"]
+    digestKey = config["digestKey"]

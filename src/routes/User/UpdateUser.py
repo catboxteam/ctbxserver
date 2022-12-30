@@ -13,7 +13,9 @@ def Update():
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get()
 
-    data = request.stream.read().decode()
+    # data = request.stream.read().decode()
+    data = request.get_data().decode('utf-8')
+
     f = io.StringIO(data)
     tree = ET.parse(f)
     root = tree.getroot()
@@ -56,7 +58,6 @@ def Pins():
 @app.route(f'{Misc.root}/filterResources',methods=['POST'])
 def filter():
     data = request.data.decode()
-    print(data)
     return Response(data,status=200)
 
 @app.route(f'{Misc.root}/showNotUploaded',methods=["POST"])

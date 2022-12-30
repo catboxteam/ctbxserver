@@ -12,6 +12,7 @@ import json
 import io
 
 @app.route(f'{Misc.root}/favourite/user/<username>',methods=['POST'])
+@Misc.lbpRequest
 def Favourite(username):
 
     cookie = request.cookies.get("MM_AUTH")
@@ -29,6 +30,7 @@ def Favourite(username):
 #</favouriteUsers>
 
 @app.route(f'{Misc.root}/favouriteUsers/<usernames>',methods=['GET'])
+@Misc.lbpRequest
 def getList(usernames):
     q = (heartedUser.select().where(heartedUser.whoHearted==usernames))
     totalUsers =''
@@ -40,6 +42,7 @@ def getList(usernames):
     return Response(dd,status=200, mimetype='text/xml')
 
 @app.route(f'{Misc.root}/unfavourite/user/<usernames>',methods=['POST'])
+@Misc.lbpRequest
 def unfav(usernames):
     cookie = request.cookies.get("MM_AUTH")
     User = Users.select().where(Users.authCookie == cookie).get()

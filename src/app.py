@@ -2,6 +2,20 @@ from flask import Flask
 app = Flask(__name__)
 import os
 import importlib
+import json
+
+
+
+cfg = {
+    'brand':'ctbx',
+    'url':'http://127.0.0.1:10060/',
+    'digestKey':None
+}
+
+if not os.path.exists("r"): os.makedirs("r")
+if not os.path.exists("png"): os.makedirs("png")
+if not os.path.exists("config.json"):
+    open("config.json","w").write(json.dumps(cfg, indent=4))
 
 
 for root, _, files in os.walk('routes'):

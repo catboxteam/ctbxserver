@@ -9,24 +9,23 @@ from __main__ import app
 import io
 @app.route(f'{Misc.root}/postComment/user/<name>',methods=['POST'])
 @app.route(f'{Misc.root}/postUserComment/<name>',methods=['POST'])
+@Misc.lbpRequest
 def postComment(name):
     cookie = request.cookies.get("MM_AUTH")
     usr = Users.select().where(Users.authCookie == cookie).get()
-    print(usr.id)
-    data = request.stream.read().decode()
+    data = request.get_data().decode('utf-8')
+
     f = io.StringIO(data)
     tree = ET.parse(f)
     root = tree.getroot()
 
-    misc = Misc
 
     for c in root:
-        match c.tag:
-            case "message":
+        if c.tag == "message":
                 Comments.create(
                     playerId=usr.id,
                     message=c.text,
-                    timestamp=misc.timestamp(),
+                    timestamp=Misc.timestamp(),
                     toUser=name
                     )
 
@@ -34,6 +33,7 @@ def postComment(name):
 
 @app.route(f'{Misc.root}/comments/user/<user>',methods=['GET'])
 @app.route(f'{Misc.root}/userComments/<user>',methods=['GET'])
+@Misc.lbpRequest
 def getComments(user):
 
     pageStart = int(request.args.get("pageStart")) -1
@@ -63,22 +63,6 @@ def getComments(user):
             ids += Element.createElem("deleted", "true")
             ids += Element.createElem("deletedBy", r.deletedUser)
             ids += Element.createElem("deleteType", r.deletedType)
-
-        # if r.isDeleted == True:
-        #     ids = Element.createElem("id",r.id)\
-        #             +Element.createElem("npHandle",Misc.idToPlayer(r.playerId))\
-        #             +Element.createElem("timestamp",r.timestamp)\
-        #             +Element.createElem("message",r.message)\
-        #             +Element.createElem("yourthumb",0)\
-        #             +Element.createElem("deleted","true")\
-        #             +Element.createElem("deletedBy",r.deletedUser)\
-        #             +Element.createElem("deleteType",r.deletedType)
-        # elif r.isDeleted == False:
-        #     ids = Element.createElem("id",r.id)\
-        #             +Element.createElem("npHandle",Misc.idToPlayer(r.playerId))\
-        #             +Element.createElem("timestamp",r.timestamp)\
-        #             +Element.createElem("message",r.message)\
-        #             +Element.createElem("yourthumb",0)\
 
         comment += Element.createElem("comment",ids)
 
